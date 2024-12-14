@@ -17,7 +17,7 @@ import { ProductsModule } from './products/products.module';
       inject: [ConfigService],
     }),
     ProductsModule,
-    OrdersModule,
+    // OrdersModule,
   ],
 })
 export class AppModule {}

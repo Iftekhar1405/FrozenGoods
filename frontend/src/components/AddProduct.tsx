@@ -1,21 +1,21 @@
 import { AttachmentIcon } from '@chakra-ui/icons';
 import {
-    Box,
-    Button,
-    Flex,
-    FormControl,
-    FormLabel,
-    Heading,
-    Image,
-    Input,
-    NumberDecrementStepper,
-    NumberIncrementStepper,
-    NumberInput,
-    NumberInputField,
-    NumberInputStepper,
-    Select,
-    useToast,
-    VStack
+  Box,
+  Button,
+  Flex,
+  FormControl,
+  FormLabel,
+  Heading,
+  Image,
+  Input,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  Select,
+  useToast,
+  VStack
 } from '@chakra-ui/react';
 import { useState } from 'react';
 
@@ -46,11 +46,11 @@ const AddProductForm = () => {
 
   const toast = useToast();
 
-  const handleImageChange = (e) => {
+  const handleImageChange = (e: any) => {
     const file = e.target.files[0];
     if (file) {
       setImage(file);
-      const reader = new FileReader();
+      const reader: any = new FileReader();
       reader.onloadend = () => {
         setPreviewUrl(reader.result);
       };
@@ -58,9 +58,9 @@ const AddProductForm = () => {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
-    
+
     // Validate required fields
     if (!name || !image || !categoryId || !brandId) {
       toast({
@@ -78,7 +78,7 @@ const AddProductForm = () => {
     formData.append('image', image);
     formData.append('categoryId', categoryId);
     formData.append('brandId', brandId);
-    
+
     // Price is optional
     if (price) {
       formData.append('price', price);
@@ -97,7 +97,7 @@ const AddProductForm = () => {
       }
 
       const result = await response.json();
-      
+
       // Reset form
       setName('');
       setPrice('');
@@ -117,7 +117,7 @@ const AddProductForm = () => {
 
     } catch (error) {
       console.error('Error adding product:', error);
-      
+
       // Show error toast
       toast({
         title: 'Error',
@@ -132,12 +132,12 @@ const AddProductForm = () => {
   };
 
   return (
-    <Box 
-      maxWidth="md" 
-      width="full" 
-      borderWidth={1} 
-      borderRadius="lg" 
-      p={6} 
+    <Box
+      maxWidth="md"
+      width="full"
+      borderWidth={1}
+      borderRadius="lg"
+      p={6}
       boxShadow="md"
     >
       <VStack spacing={4} as="form" onSubmit={handleSubmit}>
@@ -156,7 +156,7 @@ const AddProductForm = () => {
 
         <FormControl>
           <FormLabel>Product Price (Optional)</FormLabel>
-          <NumberInput 
+          <NumberInput
             value={price}
             onChange={(valueString) => setPrice(valueString)}
           >
@@ -170,7 +170,7 @@ const AddProductForm = () => {
 
         <FormControl isRequired>
           <FormLabel>Category</FormLabel>
-          <Select 
+          <Select
             placeholder="Select category"
             value={categoryId}
             onChange={(e) => setCategoryId(e.target.value)}
@@ -185,7 +185,7 @@ const AddProductForm = () => {
 
         <FormControl isRequired>
           <FormLabel>Brand</FormLabel>
-          <Select 
+          <Select
             placeholder="Select brand"
             value={brandId}
             onChange={(e) => setBrandId(e.target.value)}
@@ -201,17 +201,17 @@ const AddProductForm = () => {
         <FormControl isRequired>
           <FormLabel>Upload Product Image</FormLabel>
           <Flex alignItems="center" gap={4}>
-            <Input 
-              type="file" 
-              accept="image/*" 
+            <Input
+              type="file"
+              accept="image/*"
               onChange={handleImageChange}
               hidden
               id="image-upload"
             />
-            <Button 
-              as="label" 
-              htmlFor="image-upload" 
-              leftIcon={<AttachmentIcon />} 
+            <Button
+              as="label"
+              htmlFor="image-upload"
+              leftIcon={<AttachmentIcon />}
               variant="outline"
               cursor="pointer"
             >
@@ -219,21 +219,21 @@ const AddProductForm = () => {
             </Button>
 
             {previewUrl && (
-              <Image 
-                src={previewUrl} 
-                alt="Preview" 
-                boxSize="16" 
-                objectFit="cover" 
+              <Image
+                src={previewUrl}
+                alt="Preview"
+                boxSize="16"
+                objectFit="cover"
                 borderRadius="md"
               />
             )}
           </Flex>
         </FormControl>
 
-        <Button 
-          type="submit" 
-          colorScheme="blue" 
-          width="full" 
+        <Button
+          type="submit"
+          colorScheme="blue"
+          width="full"
           isLoading={isLoading}
         >
           Add Product

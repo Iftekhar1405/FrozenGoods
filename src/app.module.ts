@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
-import { OrdersModule } from './orders/orders.module';
-import { ProductsModule } from './products/products.module';
-import { AuthModule } from './auth/auth.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { UsersModule } from './modules/users/users.module';
+import { ProductsModule } from './modules/products/products.module';
+import { BrandModule } from './modules/brand/brand.module';
+import { ClounidaryModule } from './common/clounidary/clounidary.module';
 
 @Module({
   imports: [
@@ -17,9 +19,12 @@ import { AuthModule } from './auth/auth.module';
       }),
       inject: [ConfigService],
     }),
-    ProductsModule,
+
     AuthModule,
-    // OrdersModule,
+    UsersModule,
+    ProductsModule,
+    BrandModule,
+    ClounidaryModule
   ],
 })
 export class AppModule {}

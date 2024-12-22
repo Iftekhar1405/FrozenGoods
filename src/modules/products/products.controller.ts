@@ -20,7 +20,6 @@ import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/common/guards/roles.guard';
 import { Roles } from 'src/common/decorators/roles.decorators';
 import { UserRole } from 'src/Models/user.model';
-import { totalmem } from 'os';
 import { UpdateProductDto } from './dto/update-product.dto/update-product.dto';
 
 @Controller('products')
@@ -76,8 +75,16 @@ export class ProductsController {
     return { products, totalProducts: products.length };
   }
 
+  // Distinct Category
+  
+  @Get('category')
+  async getDistinctCategory() {
+    return this.productService.getDistictCategory();
+  }
+
   @Get(':id')
   async getOneProduct(@Param('id') id: string) {
+    console.log('leak');
     return this.productService.getOneProduct(id);
   }
 

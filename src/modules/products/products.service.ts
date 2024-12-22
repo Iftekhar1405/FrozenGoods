@@ -88,4 +88,12 @@ export class ProductsService {
       );
     }
   }
+
+
+
+  async getDistictCategory(): Promise<Product>{
+    const distinctCategory = await this.productModel.distinct('category')
+    console.log(distinctCategory)
+    return 
+  }
 }

@@ -6,6 +6,7 @@ import { UsersModule } from './modules/users/users.module';
 import { ProductsModule } from './modules/products/products.module';
 import { BrandModule } from './modules/brand/brand.module';
 import { ClounidaryModule } from './common/clounidary/clounidary.module';
+import { CategoryModule } from './modules/category/category.module';
 
 @Module({
   imports: [
@@ -22,9 +23,10 @@ import { ClounidaryModule } from './common/clounidary/clounidary.module';
 
     AuthModule,
     UsersModule,
-    ProductsModule,
+    CategoryModule,
     BrandModule,
-    ClounidaryModule
+    ProductsModule,
+    ClounidaryModule,
   ],
 })
 export class AppModule {}

@@ -23,7 +23,7 @@ export class AuthController {
   constructor(
     private authService: AuthService,
     private tokenLogService: TokenLogService,
-  ) {}
+  ) { }
 
   private setCookie(response: Response, token: string, exp = false) {
     if (!exp) {

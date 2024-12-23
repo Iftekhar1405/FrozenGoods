@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { deepEqual } from 'assert';
 import { Document, Types } from 'mongoose';
 import { Brand } from './brand.model';
+import { Category } from './category.model';
 
 @Schema({
   timestamps: true,
@@ -19,8 +20,8 @@ export class Product extends Document {
   @Prop({ type: Types.ObjectId, ref: 'Brand', required: true })
   brand: Brand | Types.ObjectId;
 
-  @Prop({ required: true, trim: true })
-  category: string;
+  @Prop({ type: Types.ObjectId, ref: 'Category', required: true })
+  category: Category | Types.ObjectId;
 
   @Prop({ required: true, trim: true })
   MRP: string;

@@ -11,7 +11,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { LogInDto } from './dto/login.dto';
 import { TokenLogService } from 'src/Models/token.models';
-import { access } from 'fs';
+
 
 @Injectable()
 export class AuthService {

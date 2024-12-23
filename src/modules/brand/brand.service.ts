@@ -7,7 +7,7 @@ import { Brand, BrandDocument } from 'src/Models/brand.model';
 export class BrandService {
   constructor(
     @InjectModel(Brand.name) private brandModel: Model<BrandDocument>,
-  ) {}
+  ) { }
 
   async getAllBrand() {
     const brands = await this.brandModel.find();

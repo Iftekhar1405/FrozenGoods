@@ -20,7 +20,7 @@ import { Roles } from 'src/common/decorators/roles.decorators';
 import { UserRole } from 'src/Models/user.model';
 import { ExportContextSolution } from 'twilio/lib/rest/bulkexports/v1/export';
 
-@Controller('brand')
+@Controller('products/brand')
 export class BrandController {
   constructor(
     private readonly brandService: BrandService,

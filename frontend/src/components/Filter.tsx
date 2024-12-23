@@ -16,13 +16,15 @@ import {
     VStack,
 } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
-import React from 'react';
+import axios from 'axios';
+import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 // Mock API calls - replace with your actual API endpoints
-const fetchBrands = async () => {
-    const response = await fetch('/api/brands');
-    return response.json();
+export const fetchBrands = async () => {
+    const response = await axios.get('http://localhost:3500/brand');
+    console.log(response)
+    return response.data
 };
 
 const fetchCategories = async (selectedBrands: any) => {
@@ -32,10 +34,10 @@ const fetchCategories = async (selectedBrands: any) => {
 };
 
 const FilterModal = ({ isOpen, onClose, title, options, selectedValues, onSelectionChange, isLoading }: any) => {
-    const [searchTerm, setSearchTerm] = React.useState('');
+    const [searchTerm, setSearchTerm] = useState('');
 
     const filteredOptions = options?.filter((option: any) =>
-        option.name.toLowerCase().includes(searchTerm.toLowerCase())
+        option.brandName.toLowerCase().includes(searchTerm.toLowerCase())
     ) || [];
 
     return (
@@ -60,17 +62,17 @@ const FilterModal = ({ isOpen, onClose, title, options, selectedValues, onSelect
                         <VStack align="stretch" spacing={2} maxH="400px" overflowY="auto">
                             {filteredOptions.map((option: any) => (
                                 <Checkbox
-                                    key={option.id}
-                                    isChecked={selectedValues.includes(option.id)}
+                                    key={option._id}
+                                    isChecked={selectedValues.includes(option._id)}
                                     onChange={(e) => {
                                         if (e.target.checked) {
-                                            onSelectionChange([...selectedValues, option.id]);
+                                            onSelectionChange([...selectedValues, option._id]);
                                         } else {
-                                            onSelectionChange(selectedValues.filter((id: any) => id !== option.id));
+                                            onSelectionChange(selectedValues.filter((id: any) => id !== option._id));
                                         }
                                     }}
                                 >
-                                    <Text>{option.name}</Text>
+                                    <Text>{option.brandName}</Text>
                                 </Checkbox>
                             ))}
                         </VStack>

@@ -17,28 +17,35 @@ import {
   useToast,
   VStack
 } from '@chakra-ui/react';
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
 import { useState } from 'react';
+import { fetchBrands } from './Filter';
 
 const AddProductForm = () => {
   // Form state
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
+  const [MRP, setMRP] = useState('')
   const [image, setImage] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
-  const [categoryId, setCategoryId] = useState('');
-  const [brandId, setBrandId] = useState('');
+  const [category, setcategory] = useState('');
+  const [brand, setbrand] = useState('');
+  const [tags, setTags] = useState('')
 
   // Dropdown data state
   const [categories, setCategories] = useState([
     { id: '1', name: 'Electronics' },
     { id: '2', name: 'Clothing' },
-    { id: '3', name: 'Books' }
+    { id: '3', name: 'Books' },
+    { id: '4', name: 'Care' }
   ]);
-  const [brands, setBrands] = useState([
-    { id: '1', name: 'Apple' },
-    { id: '2', name: 'Samsung' },
-    { id: '3', name: 'Nike' }
-  ]);
+
+  const { data: brands, isLoading: brandsLoading }: any = useQuery({
+    queryKey: ['brands'],
+    queryFn: fetchBrands
+  }
+  );
 
   // Loading and error states
   const [isLoading, setIsLoading] = useState(false);
@@ -61,8 +68,12 @@ const AddProductForm = () => {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
+
+    const tagsArr = tags.trim().split(',')
+    const tagsArrString = JSON.stringify(tagsArr)
     // Validate required fields
-    if (!name || !image || !categoryId || !brandId) {
+
+    if (!name || !image || !category || !brand || !MRP) {
       toast({
         title: 'Validation Error',
         description: 'Please provide product name, image, category, and brand',
@@ -76,35 +87,38 @@ const AddProductForm = () => {
     const formData = new FormData();
     formData.append('name', name);
     formData.append('image', image);
-    formData.append('categoryId', categoryId);
-    formData.append('brandId', brandId);
+    formData.append('category', category);
+    formData.append('brand', brand);
+    formData.append('tags', tagsArrString);
+    formData.append('MRP', MRP);
+    formData.append('price', price);
 
-    // Price is optional
-    if (price) {
-      formData.append('price', price);
-    }
 
     setIsLoading(true);
-
+    console.log(formData)
     try {
-      const response = await fetch('/api/products', {
-        method: 'POST',
-        body: formData,
-      });
+      const response: any = await axios.post('http://localhost:3500/products', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
 
-      if (!response.ok) {
-        throw new Error('Failed to add product');
       }
+      );
+      // console.log(response)
+      // if (!response.ok) {
+      //   throw new Error('Failed to add product');
+      // }
 
-      const result = await response.json();
+      const result = await response.data;
+      console.log(result)
 
       // Reset form
       setName('');
       setPrice('');
       setImage(null);
       setPreviewUrl(null);
-      setCategoryId('');
-      setBrandId('');
+      setcategory('');
+      setbrand('');
+      setMRP('')
+      setTags('')
 
       // Show success toast
       toast({
@@ -154,8 +168,8 @@ const AddProductForm = () => {
           />
         </FormControl>
 
-        <FormControl>
-          <FormLabel>Product Price (Optional)</FormLabel>
+        <FormControl isRequired>
+          <FormLabel>Product Price </FormLabel>
           <NumberInput
             value={price}
             onChange={(valueString) => setPrice(valueString)}
@@ -169,14 +183,28 @@ const AddProductForm = () => {
         </FormControl>
 
         <FormControl isRequired>
+          <FormLabel>Product MRP </FormLabel>
+          <NumberInput
+            value={MRP}
+            onChange={(valueString) => setMRP(valueString)}
+          >
+            <NumberInputField placeholder="Enter product MRP" />
+            <NumberInputStepper>
+              <NumberIncrementStepper />
+              <NumberDecrementStepper />
+            </NumberInputStepper>
+          </NumberInput>
+        </FormControl>
+
+        <FormControl isRequired>
           <FormLabel>Category</FormLabel>
           <Select
             placeholder="Select category"
-            value={categoryId}
-            onChange={(e) => setCategoryId(e.target.value)}
+            value={category}
+            onChange={(e) => setcategory(e.target.value)}
           >
             {categories.map((category) => (
-              <option key={category.id} value={category.id}>
+              <option key={category.id} value={category.name}>
                 {category.name}
               </option>
             ))}
@@ -187,16 +215,26 @@ const AddProductForm = () => {
           <FormLabel>Brand</FormLabel>
           <Select
             placeholder="Select brand"
-            value={brandId}
-            onChange={(e) => setBrandId(e.target.value)}
+            value={brand}
+            onChange={(e) => setbrand(e.target.value)}
           >
-            {brands.map((brand) => (
-              <option key={brand.id} value={brand.id}>
-                {brand.name}
+            {brands?.map((brand: any) => (
+              <option key={brand?._id} value={brand?._id}>
+                {brand?.brandName}
               </option>
             ))}
           </Select>
         </FormControl>
+
+        <FormControl >
+          <FormLabel>Tags</FormLabel>
+          <Input
+            value={tags}
+            onChange={(e) => setTags(e.target.value)}
+            placeholder="Enter tags here"
+          />
+        </FormControl>
+
 
         <FormControl isRequired>
           <FormLabel>Upload Product Image</FormLabel>

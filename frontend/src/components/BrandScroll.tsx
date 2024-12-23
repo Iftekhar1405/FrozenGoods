@@ -1,25 +1,25 @@
 import {
-    Box,
+    Center,
+    Box as ChakraBox,
     Flex,
     Image,
+    Spinner,
     Text,
-    VStack,
-    useColorModeValue
+    useColorModeValue,
+    VStack
 } from '@chakra-ui/react';
+import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
+import { fetchBrands } from './Filter';
 
 const BrandScroll = () => {
     const navigate = useNavigate();
 
-    // Sample brand data - in real usage this would come from props or an API
-    const brands = [
-        { id: 1, name: 'Nike', image: '/brand-logos/nike.png', url: '/brands/nike' },
-        { id: 2, name: 'Adidas', image: '/brand-logos/adidas.png', url: '/brands/adidas' },
-        { id: 3, name: 'Puma', image: '/brand-logos/puma.png', url: '/brands/puma' },
-        { id: 4, name: 'Reebok', image: '/brand-logos/reebok.png', url: '/brands/reebok' },
-        { id: 5, name: 'Under Armour', image: '/brand-logos/under-armour.png', url: '/brands/under-armour' },
-        { id: 6, name: 'New Balance', image: '/brand-logos/new-balance.png', url: '/brands/new-balance' },
-    ];
+    const { data: brands, isLoading: brandsLoading, isError }: any = useQuery({
+        queryKey: ['brands'],
+        queryFn: fetchBrands,
+
+    });
 
     const bgColor = useColorModeValue('white', 'gray.800');
     const borderColor = useColorModeValue('gray.200', 'gray.700');
@@ -28,13 +28,37 @@ const BrandScroll = () => {
         navigate(url);
     };
 
+    if (brandsLoading) {
+        return (
+            <Center h="200px">
+                <Spinner size="lg" />
+            </Center>
+        );
+    }
+
+    if (isError) {
+        return (
+            <Center h="200px">
+                <Text color="red.500">Failed to load brands</Text>
+            </Center>
+        );
+    }
+
+    if (!brands || brands.length === 0) {
+        return (
+            <Center h="200px">
+                <Text>No brands available</Text>
+            </Center>
+        );
+    }
+
     return (
-        <Box w="full">
-            <Box overflowX="auto" py={4}>
+        <ChakraBox w="full">
+            <ChakraBox overflowX="auto" py={4}>
                 <Flex minW="full" gap={4} px={4}>
-                    {brands.map((brand) => (
+                    {brands.map((brand: any) => (
                         <VStack
-                            key={brand.id}
+                            key={brand._id}
                             as="button"
                             onClick={() => handleBrandClick(brand.url)}
                             bg={bgColor}
@@ -51,19 +75,19 @@ const BrandScroll = () => {
                             transition="all 0.2s"
                         >
                             <Image
-                                src={brand.image}
-                                alt={`${brand.name} logo`}
+                                src={brand.img}
+                                alt={`${brand.brandName} logo`}
                                 boxSize="100px"
                                 objectFit="contain"
                             />
                             <Text fontSize="sm" fontWeight="medium">
-                                {brand.name}
+                                {brand.brandName}
                             </Text>
                         </VStack>
                     ))}
                 </Flex>
-            </Box>
-        </Box>
+            </ChakraBox>
+        </ChakraBox>
     );
 };
 

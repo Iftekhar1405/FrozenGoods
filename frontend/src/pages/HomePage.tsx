@@ -1,4 +1,5 @@
 import { Box, Heading, Text } from "@chakra-ui/react";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import ProductList from "../components/ProductList";
 import { Product } from "../types/types";
@@ -10,9 +11,10 @@ const HomePage: React.FC = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("/api/products");
-        const data = await response.json();
-        setProducts(data);
+        const response = await axios.get("http://localhost:3500/products");
+        const data = await response.data;
+        console.log(data)
+        setProducts(data.products);
       } catch (error) {
         console.error("Failed to fetch products:", error);
       } finally {

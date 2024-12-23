@@ -9,35 +9,41 @@ import {
   Image,
   Input,
   useToast,
-  VStack
+  VStack,
 } from '@chakra-ui/react';
-import { useState } from 'react';
+import axios from 'axios';
+import { ChangeEvent, FormEvent, useState } from 'react';
+
+interface AddBrandCategoryFormProps {
+  type?: string;
+  endpoint: string;
+  onSuccess?: (response: any) => void;
+  onError?: (error: any) => void;
+}
 
 const AddBrandCategoryForm = ({
   type = 'brand',
   endpoint,
   onSuccess,
-  onError
-}: any) => {
-  const [name, setName] = useState('');
-  const [image, setImage] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  onError,
+}: AddBrandCategoryFormProps) => {
+  const [name, setName] = useState<string>('');
+  const [image, setImage] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const toast = useToast();
 
-  const handleImageChange = (e: any) => {
-    const file = e.target.files[0];
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
     if (file) {
       setImage(file);
-      const reader: any = new FileReader();
-      reader.onloadend = () => {
-        setPreviewUrl(reader.result);
-      };
+      const reader = new FileReader();
+      reader.onloadend = () => setPreviewUrl(reader.result as string);
       reader.readAsDataURL(file);
     }
   };
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
     if (!name || !image) {
@@ -58,50 +64,36 @@ const AddBrandCategoryForm = ({
     setIsLoading(true);
 
     try {
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        body: formData,
+      const response = await axios.post(endpoint, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to add ' + type);
-      }
-
-      const result = await response.json();
-
+      // Reset form
       setName('');
       setImage(null);
       setPreviewUrl(null);
 
-      // Show success toast
       toast({
         title: `${type.charAt(0).toUpperCase() + type.slice(1)} Added`,
-        description: `Successfully added new ${type}`,
+        description: `Successfully added a new ${type}`,
         status: 'success',
         duration: 3000,
         isClosable: true,
       });
 
-      // Call success callback if provided
-      if (onSuccess) {
-        onSuccess(result);
-      }
+      if (onSuccess) onSuccess(response.data);
     } catch (error) {
       console.error(`Error adding ${type}:`, error);
 
-      // Show error toast
       toast({
         title: 'Error',
-        description: `Failed to add ${type}`,
+        description: `Failed to add ${type}. Please try again later.`,
         status: 'error',
         duration: 3000,
         isClosable: true,
       });
 
-      // Call error callback if provided
-      if (onError) {
-        onError(error);
-      }
+      if (onError) onError(error);
     } finally {
       setIsLoading(false);
     }
@@ -109,13 +101,12 @@ const AddBrandCategoryForm = ({
 
   return (
     <Box
-      maxW={'2xl'}
+      maxW="2xl"
       width="full"
       borderWidth={1}
       borderRadius="lg"
       p={6}
       boxShadow="md"
-
     >
       <VStack spacing={4} as="form" onSubmit={handleSubmit}>
         <Heading size="md" textAlign="center">

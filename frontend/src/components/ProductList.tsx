@@ -38,7 +38,7 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
           p={4}
         >
           <Image
-            src={product.imageUrl || "/placeholder.png"}
+            src={product.image || "/placeholder.png"}
             alt={product.name}
             height="200px"
             width="100%"
@@ -48,7 +48,7 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
             <Text fontWeight="bold" fontSize="lg">
               {product.name}
             </Text>
-            <Text>${product.price.toFixed(2)}</Text>
+            <Text>${product?.price}</Text>
             <Text>In Stock: {product.stockQuantity}</Text>
             <NumberInput
               min={1}

@@ -8,7 +8,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <Flex minH="100vh" maxW={'100vw'}>
       <Sidebar />
-      <Box p={4} >
+      <Box >
         <BrandScroll />
         <SearchBar />
         {children}

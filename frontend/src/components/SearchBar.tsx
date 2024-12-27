@@ -1,14 +1,13 @@
 import { SearchIcon } from "@chakra-ui/icons";
 import {
   Box,
-  HStack,
   Input,
   InputGroup,
   InputRightElement,
   List,
   ListItem,
   Spinner,
-  Text,
+  Text
 } from "@chakra-ui/react";
 import debounce from "lodash/debounce";
 import React, { useCallback, useState } from "react";
@@ -65,8 +64,24 @@ const SearchBar: React.FC = () => {
   };
 
   return (
-    <HStack justify={'space-between'} align={'center'} mb={4} w={'100vw'} maxW={'1000px'} >
-      <Box flex='1' mx="auto" position="relative">
+    <Box
+      display="flex"
+      flexDirection={{ base: "column", md: "row" }}
+      justifyContent="space-between"
+      alignItems="center"
+      mb={4}
+      w="100%"
+      maxW="1000px"
+      mx="auto"
+      p={5}
+    >
+      {/* Search Bar Section */}
+      <Box
+        flex={{ base: "unset", md: "1" }}
+        mx={{ base: 0, md: "auto" }}
+        w={{ base: "100%", md: "auto" }}
+        position="relative"
+      >
         <InputGroup>
           <Input
             placeholder="Search products..."
@@ -116,10 +131,17 @@ const SearchBar: React.FC = () => {
           </List>
         )}
       </Box>
-      <Box flex={'1'}>
+
+      {/* Filters Section */}
+      <Box
+        flex={{ base: "unset", md: "1" }}
+        w={{ base: "100%", md: "auto" }}
+        mt={{ base: 4, md: 0 }}
+      >
         <Filters />
       </Box>
-    </HStack>
+    </Box>
+
   );
 };
 

@@ -43,10 +43,11 @@ const FilterModal = ({ isOpen, onClose, title, options, selectedValues, onSelect
     return (
         <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
             <ModalOverlay />
-            <ModalContent maxW="400px">
+            <ModalContent maxW={{ base: "90%", sm: "400px" }}>
                 <ModalHeader>{title}</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody pb={6}>
+                    {/* Search Input */}
                     <Input
                         placeholder="Search..."
                         mb={4}
@@ -54,12 +55,20 @@ const FilterModal = ({ isOpen, onClose, title, options, selectedValues, onSelect
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
 
+                    {/* Loading Spinner */}
                     {isLoading ? (
                         <Box display="flex" justifyContent="center" py={4}>
                             <Spinner />
                         </Box>
                     ) : (
-                        <VStack align="stretch" spacing={2} maxH="400px" overflowY="auto">
+                        // Filtered Options List
+                        <VStack
+                            align="stretch"
+                            spacing={2}
+                            maxH="400px"
+                            overflowY="auto"
+                            w="100%"
+                        >
                             {filteredOptions.map((option: any) => (
                                 <Checkbox
                                     key={option._id}
@@ -68,7 +77,9 @@ const FilterModal = ({ isOpen, onClose, title, options, selectedValues, onSelect
                                         if (e.target.checked) {
                                             onSelectionChange([...selectedValues, option._id]);
                                         } else {
-                                            onSelectionChange(selectedValues.filter((id: any) => id !== option._id));
+                                            onSelectionChange(
+                                                selectedValues.filter((id: any) => id !== option._id)
+                                            );
                                         }
                                     }}
                                 >
@@ -80,6 +91,7 @@ const FilterModal = ({ isOpen, onClose, title, options, selectedValues, onSelect
                 </ModalBody>
             </ModalContent>
         </Modal>
+
     );
 };
 
@@ -125,56 +137,75 @@ const Filters = () => {
     };
 
     return (
-        <>
-            <HStack spacing={4} p={4} >
+        <Box
+            w="100%"
+            maxW="1000px"
+            mx="auto"
+            p={4}
+            display="flex"
+            flexDirection={{ base: "column", sm: "row" }}
+            alignItems={{ base: "stretch", sm: "center" }}
+            justifyContent="space-between"
+            gap={4}
+        >
+            {/* Filter Buttons */}
+            <HStack
+                spacing={4}
+                w={{ base: "100%", sm: "auto" }}
+                justifyContent={{ base: "center", sm: "flex-start" }}
+            >
                 <Button
                     onClick={brandModal.onOpen}
-                    colorScheme={selectedBrands.length ? 'blue' : 'gray'}
-                    size={'md'}
+                    colorScheme={selectedBrands.length ? "blue" : "gray"}
+                    size="md"
+                    w={{ base: "100%", sm: "auto" }}
                 >
                     Brands ({selectedBrands.length})
                 </Button>
 
                 <Button
                     onClick={categoryModal.onOpen}
-                    colorScheme={selectedCategories.length ? 'blue' : 'gray'}
-                    size={'md'}
+                    colorScheme={selectedCategories.length ? "blue" : "gray"}
+                    size="md"
+                    w={{ base: "100%", sm: "auto" }}
                 >
                     Categories ({selectedCategories.length})
                 </Button>
 
-                {(selectedBrands.length > 0 || selectedCategories.length > 0) && (
+                {selectedBrands.length > 0 || selectedCategories.length > 0 ? (
                     <Button
                         variant="outline"
-                        onClick={() => {
-                            setSearchParams({});
-                        }}
+                        onClick={() => setSearchParams({})}
+                        w={{ base: "100%", sm: "auto" }}
                     >
                         Clear All
                     </Button>
-                )}
+                ) : null}
             </HStack>
 
+            {/* Brand Modal */}
             <FilterModal
                 isOpen={brandModal.isOpen}
                 onClose={brandModal.onClose}
                 title="Select Brands"
                 options={brands}
                 selectedValues={selectedBrands}
-                onSelectionChange={(values: any) => updateFilters('brands', values)}
+                onSelectionChange={(values: any) => updateFilters("brands", values)}
                 isLoading={brandsLoading}
             />
 
+            {/* Category Modal */}
             <FilterModal
                 isOpen={categoryModal.isOpen}
                 onClose={categoryModal.onClose}
                 title="Select Categories"
                 options={categories}
                 selectedValues={selectedCategories}
-                onSelectionChange={(values: any) => updateFilters('categories', values)}
+                onSelectionChange={(values: any) => updateFilters("categories", values)}
                 isLoading={categoriesLoading}
             />
-        </>
+        </Box>
+
     );
 };
 

@@ -1,4 +1,4 @@
-import { Box, Heading, Text } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import ProductList from "../components/ProductList";
@@ -27,7 +27,6 @@ const HomePage: React.FC = () => {
 
   return (
     <Box>
-      <Heading mb={6}>Featured Products</Heading>
       {loading ? (
         <Box textAlign="center" py={10}>
           Loading...
@@ -35,7 +34,6 @@ const HomePage: React.FC = () => {
       ) : (
         <>
           <ProductList products={products} />
-          <Text size="2xl">hello working</Text>
         </>
       )}
     </Box>

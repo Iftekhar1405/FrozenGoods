@@ -1,6 +1,6 @@
 import {
+    Box,
     Center,
-    Box as ChakraBox,
     Flex,
     Image,
     Spinner,
@@ -20,6 +20,8 @@ const BrandScroll = () => {
         queryFn: fetchBrands,
 
     });
+
+
 
     const bgColor = useColorModeValue('white', 'gray.800');
     const borderColor = useColorModeValue('gray.200', 'gray.700');
@@ -53,9 +55,14 @@ const BrandScroll = () => {
     }
 
     return (
-        <ChakraBox w="full">
-            <ChakraBox overflowX="auto" py={4}>
-                <Flex minW="full" gap={4} px={4}>
+        <Box w="full" maxW="100vw" overflowX="hidden">
+            <Box overflowX="auto" py={4}>
+                <Flex
+                    gap={4}
+                    px={4}
+                    w="max-content"
+                    justifyContent="flex-start"
+                >
                     {brands.map((brand: any) => (
                         <VStack
                             key={brand._id}
@@ -66,11 +73,10 @@ const BrandScroll = () => {
                             borderColor={borderColor}
                             borderRadius="lg"
                             p={4}
-                            minW="150px"
                             shadow="md"
                             _hover={{
-                                shadow: 'lg',
-                                transform: 'translateY(-2px)',
+                                shadow: "lg",
+                                transform: "translateY(-2px)",
                             }}
                             transition="all 0.2s"
                         >
@@ -86,8 +92,11 @@ const BrandScroll = () => {
                         </VStack>
                     ))}
                 </Flex>
-            </ChakraBox>
-        </ChakraBox>
+            </Box>
+        </Box>
+
+
+
     );
 };
 

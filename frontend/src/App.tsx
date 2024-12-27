@@ -10,10 +10,47 @@ import { CartProvider } from "./context/CartContext";
 import AddForm from "./pages/AddForm";
 import CategoryPage from "./pages/CategoryPage";
 import HomePage from "./pages/HomePage";
+import { path } from "framer-motion/client";
+import LoginComponent from "./components/demo-login";
+import RegisterComponent from "./components/demo-register";
 
 
 const App: React.FC = () => {
+  const routeMap = [
+    {
+      path: "/",
+      element: <HomePage />
+    },
+    {
+      path: "/category/:category",
+      element: <CategoryPage />
+    },
+    {
+      path: "/add-form",
+      element: <AddForm />
+    },
+    {
+      path: "/cart",
+      element: <Cart />
+    },
+    {
+      path: "/scan",
+      element: <QRScanner />
+    },
+    {
+      path: "/auth",
+      element: <AuthForm />
+    },
+    {
+      path: "/login",
+      element: <LoginComponent/>
+    },
+    {
+      path: "/register",
+      element: <RegisterComponent />
+    }
 
+  ]
   const queryCliet = new QueryClient()
   return (
     <ChakraProvider>
@@ -22,12 +59,9 @@ const App: React.FC = () => {
           <Router>
             <Layout>
               <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/category/:category" element={<CategoryPage />} />
-                <Route path="/add-form" element={<AddForm />} />
-                <Route path="/cart" element={<Cart />} />
-                <Route path="/scan" element={<QRScanner />} />
-                <Route path="/auth" element={<AuthForm />} />
+                {routeMap.map((route, index) => (
+                  <Route key={index} path={route.path} element={route.element} />
+                ))}
               </Routes>
             </Layout>
           </Router>

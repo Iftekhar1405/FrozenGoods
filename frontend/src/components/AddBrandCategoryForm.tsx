@@ -64,7 +64,7 @@ const AddBrandCategoryForm = ({
     setIsLoading(true);
 
     try {
-      const response = await axios.post(endpoint, formData, {
+      const response = await axios.post(`products/${endpoint}`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 

@@ -14,9 +14,13 @@
     "@chakra-ui/react": "^2.8.2",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.0",
+    "@tanstack/react-query": "^5.62.8",
+    "axios": "^1.7.9",
     "framer-motion": "^11.0.8",
     "html5-qrcode": "^2.3.8",
+    "js-cookie": "^3.0.5",
     "lodash": "^4.17.21",
+    "lucide-react": "^0.469.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.22.3"

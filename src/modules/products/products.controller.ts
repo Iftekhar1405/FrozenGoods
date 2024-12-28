@@ -75,8 +75,8 @@ export class ProductsController {
   }
 
   // Distinct Category
-  
-  @Get('category')
+
+  @Get('Distinctcategory')
   async getDistinctCategory() {
     return this.productService.getDistictCategory();
   }

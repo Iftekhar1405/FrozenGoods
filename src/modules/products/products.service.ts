@@ -20,11 +20,17 @@ export class ProductsService {
   constructor(
     @InjectModel(Product.name) private readonly productModel: Model<Product>,
     @InjectModel(Brand.name) private readonly brandModel: Model<Brand>,
-  ) { }
+  ) {}
 
   //   Method to Create a new Product
   async createProduct(createProdcutDto: CreateProductDto): Promise<Product> {
     try {
+      const isBrandAvailable = await this.brandModel.findById(
+        createProdcutDto.brand,
+      );
+      if (!isBrandAvailable) {
+        throw new HttpException('Brand does not exist', HttpStatus.BAD_REQUEST);
+      }
       const newProdcut = new this.productModel(createProdcutDto);
       await newProdcut.save();
 
@@ -89,11 +95,9 @@ export class ProductsService {
     }
   }
 
-
-
-  async getDistictCategory(): Promise<Product>{
-    const distinctCategory = await this.productModel.distinct('category')
-    console.log(distinctCategory)
-    return 
+  async getDistictCategory(): Promise<Product> {
+    const distinctCategory = await this.productModel.distinct('category');
+    console.log(distinctCategory);
+    return;
   }
 }

@@ -33,7 +33,6 @@ export class ProductsController {
   @Post()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
-  // @Roles(UserRole.ADMIN)
   // telling server to temporoary save the file in memeory
   @UseInterceptors(FileInterceptor('image', { storage: memoryStorage() }))
   // init params

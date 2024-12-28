@@ -32,6 +32,10 @@ export class BrandController {
     return this.brandService.getAllBrand();
   }
 
+  @Get('/ji')
+  async demo() {
+    return 'hello';
+  }
   @Post('/')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)

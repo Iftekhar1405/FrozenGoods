@@ -1,18 +1,18 @@
-import { useState } from "react";
 import axios from "axios";
+import { useState } from "react";
 // import Cookies from "js-cookie";
+import { EmailIcon, LockIcon, ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import {
-  VStack,
+  Button,
   FormControl,
+  FormErrorMessage,
   FormLabel,
+  Input,
   InputGroup,
   InputLeftElement,
-  Input,
-  Button,
   useToast,
-  FormErrorMessage,
+  VStack,
 } from "@chakra-ui/react";
-import { EmailIcon, LockIcon, ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 
 const LoginComponent = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -80,8 +80,8 @@ const LoginComponent = () => {
     setIsLoading(true);
 
     try {
-      const response = await axios.post(
-        "http://localhost:3500/auth/login",
+      await axios.post(
+        "https://frizzers-favess-api.vercel.app/auth/login",
         {
           phoneNumber: `+91${phoneNumber}`, // Add +91 prefix here
           password,

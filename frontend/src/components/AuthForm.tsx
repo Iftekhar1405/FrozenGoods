@@ -1,4 +1,4 @@
-import {  EmailIcon, LockIcon, ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import { EmailIcon, LockIcon, ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import {
   Alert,
   AlertIcon,
@@ -28,7 +28,6 @@ const AuthForm = () => {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [otp, setOtp] = useState("");
   const [message, setMessage] = useState("");
   const toast = useToast();
 
@@ -57,7 +56,7 @@ const AuthForm = () => {
     });
   };
 
-  const handleVerifyOTP = (value: any) => {
+  const handleVerifyOTP = () => {
     // In a real app, you would verify OTP here
     setMessage("Registration successful");
     toast({
@@ -199,8 +198,8 @@ const AuthForm = () => {
             {formType === "login"
               ? "Login"
               : formType === "register"
-              ? "Register"
-              : "Verify OTP"}
+                ? "Register"
+                : "Verify OTP"}
           </Heading>
         </CardHeader>
 

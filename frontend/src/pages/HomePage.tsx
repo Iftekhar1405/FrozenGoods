@@ -11,7 +11,7 @@ const HomePage: React.FC = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("http://localhost:3500/products");
+        const response = await axios.get("https://frizzers-favess-api.vercel.app/products");
         const data = await response.data;
         console.log(data)
         setProducts(data.products);

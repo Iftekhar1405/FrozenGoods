@@ -1,12 +1,11 @@
 import { Box, Heading } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import ProductList from "../components/ProductList";
 import { Product } from "../types/types";
 
 const CategoryPage: React.FC = () => {
   const { category } = useParams<{ category: string }>();
-  const location = useLocation();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 

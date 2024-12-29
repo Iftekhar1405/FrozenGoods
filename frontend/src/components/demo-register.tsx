@@ -1,17 +1,17 @@
-import { useState } from 'react';
-import axios from 'axios';
+import { LockIcon, ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 import {
-  VStack,
+  Button,
   FormControl,
+  FormErrorMessage,
   FormLabel,
+  Input,
   InputGroup,
   InputLeftElement,
-  Input,
-  Button,
   useToast,
-  FormErrorMessage,
+  VStack,
 } from '@chakra-ui/react';
-import { EmailIcon, LockIcon, ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
+import axios from 'axios';
+import { useState } from 'react';
 
 const RegisterComponent = () => {
   const [name, setName] = useState('');
@@ -30,7 +30,7 @@ const RegisterComponent = () => {
   const handlePhoneNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // Remove any non-digit characters
     const value = e.target.value.replace(/\D/g, '');
-    
+
     // Limit to 10 digits
     if (value.length <= 10) {
       setPhoneNumber(value);
@@ -85,7 +85,7 @@ const RegisterComponent = () => {
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateInputs()) {
       return;
     }
@@ -93,8 +93,8 @@ const RegisterComponent = () => {
     setIsLoading(true);
 
     try {
-      const response = await axios.post(
-        'http://localhost:3500/auth/register',
+      await axios.post(
+        'https://frizzers-favess-api.vercel.app/auth/register',
         {
           name: name.trim(),
           phoneNumber: `+91${phoneNumber}`, // Add +91 prefix here
@@ -120,7 +120,7 @@ const RegisterComponent = () => {
 
     } catch (error) {
       let errorMessage = 'Registration failed';
-      
+
       if (axios.isAxiosError(error) && error.response) {
         errorMessage = error.response.data.message || errorMessage;
       }

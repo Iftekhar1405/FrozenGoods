@@ -22,7 +22,7 @@ import { useSearchParams } from 'react-router-dom';
 
 // Mock API calls - replace with your actual API endpoints
 export const fetchBrands = async () => {
-    const response = await axios.get('http://localhost:3500/products/brand');
+    const response = await axios.get('https://frizzers-favess-api.vercel.app/products/brand');
     console.log(response)
     return response.data
 };

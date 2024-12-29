@@ -34,14 +34,14 @@ const AddProductForm = () => {
   const [tags, setTags] = useState('')
 
   // Dropdown data state
-  const [categories, setCategories] = useState([
+  const [categories] = useState([
     { id: '1', name: 'Electronics' },
     { id: '2', name: 'Clothing' },
     { id: '3', name: 'Books' },
     { id: '4', name: 'Care' }
   ]);
 
-  const { data: brands, isLoading: brandsLoading }: any = useQuery({
+  const { data: brands, }: any = useQuery({
     queryKey: ['brands'],
     queryFn: fetchBrands
   }
@@ -49,7 +49,6 @@ const AddProductForm = () => {
 
   // Loading and error states
   const [isLoading, setIsLoading] = useState(false);
-  const [isInitialLoading, setIsInitialLoading] = useState(false);
 
   const toast = useToast();
 
@@ -97,7 +96,7 @@ const AddProductForm = () => {
     setIsLoading(true);
     console.log(formData)
     try {
-      const response: any = await axios.post('http://localhost:3500/products', formData, {
+      const response: any = await axios.post('https://frizzers-favess-api.vercel.app/products', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
 
       }

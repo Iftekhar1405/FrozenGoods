@@ -4,15 +4,13 @@ import React from "react";
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import AuthForm from "./components/AuthForm";
 import Cart from "./components/Cart";
+import LoginComponent from "./components/demo-login";
+import RegisterComponent from "./components/demo-register";
 import Layout from "./components/Layout";
-import QRScanner from "./components/QRScanner";
 import { CartProvider } from "./context/CartContext";
 import AddForm from "./pages/AddForm";
 import CategoryPage from "./pages/CategoryPage";
 import HomePage from "./pages/HomePage";
-import { path } from "framer-motion/client";
-import LoginComponent from "./components/demo-login";
-import RegisterComponent from "./components/demo-register";
 
 
 const App: React.FC = () => {
@@ -34,16 +32,12 @@ const App: React.FC = () => {
       element: <Cart />
     },
     {
-      path: "/scan",
-      element: <QRScanner />
-    },
-    {
       path: "/auth",
       element: <AuthForm />
     },
     {
       path: "/login",
-      element: <LoginComponent/>
+      element: <LoginComponent />
     },
     {
       path: "/register",

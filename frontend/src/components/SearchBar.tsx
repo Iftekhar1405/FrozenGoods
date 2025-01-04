@@ -73,7 +73,6 @@ const SearchBar: React.FC = () => {
       w="100%"
       maxW="1000px"
       mx="auto"
-      p={5}
     >
       {/* Search Bar Section */}
       <Box

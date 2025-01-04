@@ -1,6 +1,6 @@
 import { Box, Flex } from "@chakra-ui/react";
 import React from "react";
-import BrandScroll from "./BrandScroll";
+import Navbar from "./Navbar";
 import SearchBar from "./SearchBar";
 import Sidebar from "./Sidebar";
 
@@ -9,8 +9,9 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     <Flex minH="100vh" maxW={'100vw'}>
       <Sidebar />
       <Box >
-        <BrandScroll />
+        <Navbar />
         <SearchBar />
+
         {children}
       </Box>
     </Flex>

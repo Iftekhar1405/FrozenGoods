@@ -10,6 +10,7 @@ import {
 import React from "react";
 import { useCart } from "../context/CartContext";
 import { Product } from "../types/types";
+import BrandScroll from "./BrandScroll";
 
 interface ProductListProps {
   products: Product[];
@@ -28,78 +29,81 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
   };
 
   return (
-    <Box
-      display="flex"
-      justifyContent="center"
-      p={4}
-      w="100%"
-      bg="gray.50"
-    >
-      <SimpleGrid
-        columns={{ base: 1, sm: 2, md: 3, lg: 4 }}
-        spacing={6}
-        maxW="1200px"
+    <>
+      <BrandScroll />
+
+      <Box
+        display="flex"
+        justifyContent="center"
+        p={4}
         w="100%"
+        bg="gray.50"
       >
-        {products.map((product) => (
-          <Box
-            key={product._id}
-            borderWidth="1px"
-            borderRadius="lg"
-            overflow="hidden"
-            bg="white"
-            shadow="md"
-          >
-            {/* Product Image */}
-            <Image
-              src={product.image || "/placeholder.png"}
-              alt={product.name}
-              height="200px"
-              width="100%"
-              objectFit="cover"
-            />
+        <SimpleGrid
+          columns={{ base: 1, sm: 2, md: 3, lg: 4 }}
+          spacing={6}
+          maxW="1200px"
+          w="100%"
+        >
+          {products.map((product) => (
+            <Box
+              key={product._id}
+              borderWidth="1px"
+              borderRadius="lg"
+              overflow="hidden"
+              bg="white"
+              shadow="md"
+            >
+              {/* Product Image */}
+              <Image
+                src={product.image || "/placeholder.png"}
+                alt={product.name}
+                height="200px"
+                width="100%"
+                objectFit="cover"
+              />
 
-            {/* Product Details */}
-            <Box p={4}>
-              <Text fontWeight="bold" fontSize="lg" mb={2}>
-                {product.name}
-              </Text>
-              <Text fontSize="md" color="gray.600" mb={2}>
-                ${product?.price}
-              </Text>
-              <Text fontSize="sm" color="gray.500" mb={2}>
-                In Stock: {product.stockQuantity}
-              </Text>
+              {/* Product Details */}
+              <Box p={4}>
+                <Text fontWeight="bold" fontSize="lg" mb={2}>
+                  {product.name}
+                </Text>
+                <Text fontSize="md" color="gray.600" mb={2}>
+                  ${product?.price}
+                </Text>
+                <Text fontSize="sm" color="gray.500" mb={2}>
+                  In Stock: {product.stockQuantity}
+                </Text>
 
-              {/* Quantity Selector */}
-              <NumberInput
-                size="sm"
-                min={1}
-                max={product.stockQuantity}
-                value={quantities[product._id] || 1}
-                onChange={(value) =>
-                  setQuantities((prev) => ({ ...prev, [product._id]: parseInt(value) }))
-                }
-                mb={3}
-              >
-                <NumberInputField />
-              </NumberInput>
+                {/* Quantity Selector */}
+                <NumberInput
+                  size="sm"
+                  min={1}
+                  max={product.stockQuantity}
+                  value={quantities[product._id] || 1}
+                  onChange={(value) =>
+                    setQuantities((prev) => ({ ...prev, [product._id]: parseInt(value) }))
+                  }
+                  mb={3}
+                >
+                  <NumberInputField />
+                </NumberInput>
 
-              {/* Add to Cart Button */}
-              <Button
-                colorScheme="blue"
-                onClick={() => handleAddToCart(product)}
-                isDisabled={product.stockQuantity === 0}
-                w="100%"
-              >
-                Add to Cart
-              </Button>
+                {/* Add to Cart Button */}
+                <Button
+                  colorScheme="blue"
+                  onClick={() => handleAddToCart(product)}
+                  isDisabled={product.stockQuantity === 0}
+                  w="100%"
+                >
+                  Add to Cart
+                </Button>
+              </Box>
             </Box>
-          </Box>
-        ))}
-      </SimpleGrid>
-    </Box>
-
+          ))}
+        </SimpleGrid>
+      </Box>
+    </>
   );
 };
 

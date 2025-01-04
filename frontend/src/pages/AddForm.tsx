@@ -5,7 +5,7 @@ import AddProductForm from "../components/AddProduct"
 const AddForm = () => {
     return (
         <HStack>
-            <VStack m={10} justify={'space-around'} w={'full'}>
+            <VStack justify={'space-between'}>
                 <AddBrandCategoryForm endpoint={'https://frizzers-favess-api.vercel.app/products/brand'} />
                 <AddBrandCategoryForm type="category" endpoint={'https://frizzers-favess-api.vercel.app/products/category'} />
 

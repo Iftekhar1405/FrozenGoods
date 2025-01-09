@@ -1,16 +1,18 @@
 import {
     Box,
+    BoxProps,
     Button,
     Center,
     Divider,
+    DividerProps,
     Flex,
     Grid,
+    GridProps,
     Image,
     Skeleton,
     SkeletonText,
     Spinner,
-    Text,
-    useColorModeValue
+    Text
 } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 import { motion, useInView } from 'framer-motion';
@@ -18,9 +20,9 @@ import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchBrands } from './Filter';
 
-const MotionBox: any = motion(Box);
-const MotionDivider = motion(Divider);
-const MotionGrid = motion(Grid);
+const MotionBox: any = motion<BoxProps>(Box as any);
+const MotionDivider: any = motion<DividerProps>(Divider as any);
+const MotionGrid: any = motion<GridProps>(Grid as any)
 
 const CategorySkeleton = () => (
     <Box
@@ -78,12 +80,12 @@ const BrandScroll = () => {
 
     // console.log(brands)
 
-    const bgColor = useColorModeValue('white', 'gray.800');
-    const borderColor = useColorModeValue('gray.200', 'gray.700');
+    // const bgColor = useColorModeValue('white', 'gray.800');
+    // const borderColor = useColorModeValue('gray.200', 'gray.700');
 
-    const handleBrandClick = (url: any) => {
-        navigate(url);
-    };
+    // const handleBrandClick = (url: any) => {
+    //     navigate(url);
+    // };
 
     if (brandsLoading) {
         return (

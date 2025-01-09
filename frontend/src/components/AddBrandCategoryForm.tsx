@@ -1,32 +1,34 @@
 import { AttachmentIcon } from '@chakra-ui/icons';
 import {
-  Box,
   Button,
+  Drawer,
+  DrawerBody,
+  DrawerCloseButton,
+  DrawerContent,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerOverlay,
   Flex,
   FormControl,
   FormLabel,
-  Heading,
   Image,
   Input,
   useToast,
-  VStack,
+  VStack
 } from '@chakra-ui/react';
 import axios from 'axios';
 import { ChangeEvent, FormEvent, useState } from 'react';
 
-interface AddBrandCategoryFormProps {
-  type?: string;
-  endpoint: string;
-  onSuccess?: (response: any) => void;
-  onError?: (error: any) => void;
-}
+
 
 const AddBrandCategoryForm = ({
   type = 'brand',
   endpoint,
   onSuccess,
   onError,
-}: AddBrandCategoryFormProps) => {
+  isOpen,
+  onClose
+}: any) => {
   const [name, setName] = useState<string>('');
   const [image, setImage] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -100,70 +102,72 @@ const AddBrandCategoryForm = ({
   };
 
   return (
-    <Box
-      maxW="2xl"
-      width="full"
-      borderWidth={1}
-      borderRadius="lg"
-      p={6}
-      boxShadow="md"
-    >
-      <VStack spacing={4} as="form" onSubmit={handleSubmit}>
-        <Heading size="md" textAlign="center">
+    <Drawer isOpen={isOpen} placement="right" onClose={onClose} size={'sm'}>
+      < DrawerOverlay />
+      <DrawerContent>
+        <DrawerCloseButton />
+        <DrawerHeader>
           Add New {type.charAt(0).toUpperCase() + type.slice(1)}
-        </Heading>
+        </DrawerHeader>
 
-        <FormControl isRequired>
-          <FormLabel>{type.charAt(0).toUpperCase() + type.slice(1)} Name</FormLabel>
-          <Input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder={`Enter ${type} name`}
-          />
-        </FormControl>
-
-        <FormControl>
-          <FormLabel>Upload {type.charAt(0).toUpperCase() + type.slice(1)} Image</FormLabel>
-          <Flex alignItems="center" gap={4}>
-            <Input
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              hidden
-              id="image-upload"
-            />
-            <Button
-              as="label"
-              htmlFor="image-upload"
-              leftIcon={<AttachmentIcon />}
-              variant="outline"
-              cursor="pointer"
-            >
-              Choose Image
-            </Button>
-
-            {previewUrl && (
-              <Image
-                src={previewUrl}
-                alt="Preview"
-                boxSize="16"
-                objectFit="cover"
-                borderRadius="md"
+        <DrawerBody>
+          <VStack spacing={4} as="form" onSubmit={handleSubmit}>
+            <FormControl isRequired>
+              <FormLabel>{type.charAt(0).toUpperCase() + type.slice(1)} Name</FormLabel>
+              <Input
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder={`Enter ${type} name`}
               />
-            )}
-          </Flex>
-        </FormControl>
+            </FormControl>
 
-        <Button
-          type="submit"
-          colorScheme="blue"
-          width="full"
-          isLoading={isLoading}
-        >
-          Add {type.charAt(0).toUpperCase() + type.slice(1)}
-        </Button>
-      </VStack>
-    </Box>
+            <FormControl>
+              <FormLabel>Upload {type.charAt(0).toUpperCase() + type.slice(1)} Image</FormLabel>
+              <Flex alignItems="center" gap={4}>
+                <Input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  hidden
+                  id="image-upload"
+                />
+                <Button
+                  as="label"
+                  htmlFor="image-upload"
+                  leftIcon={<AttachmentIcon />}
+                  variant="outline"
+                  cursor="pointer"
+                >
+                  Choose Image
+                </Button>
+
+                {previewUrl && (
+                  <Image
+                    src={previewUrl}
+                    alt="Preview"
+                    boxSize="16"
+                    objectFit="cover"
+                    borderRadius="md"
+                  />
+                )}
+              </Flex>
+            </FormControl>
+          </VStack>
+        </DrawerBody>
+
+        <DrawerFooter>
+          <Button
+            type="submit"
+            colorScheme="blue"
+            width="full"
+            isLoading={isLoading}
+          >
+            Add {type.charAt(0).toUpperCase() + type.slice(1)}
+          </Button>
+        </DrawerFooter>
+      </DrawerContent>
+    </Drawer >
+
   );
 };
 

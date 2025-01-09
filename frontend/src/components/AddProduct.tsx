@@ -1,11 +1,16 @@
 import { AttachmentIcon } from '@chakra-ui/icons';
 import {
-  Box,
   Button,
+  Drawer,
+  DrawerBody,
+  DrawerCloseButton,
+  DrawerContent,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerOverlay,
   Flex,
   FormControl,
   FormLabel,
-  Heading,
   Image,
   Input,
   NumberDecrementStepper,
@@ -22,7 +27,7 @@ import axios from 'axios';
 import { useState } from 'react';
 import { fetchBrands } from './Filter';
 
-const AddProductForm = () => {
+const AddProductForm = ({ isOpen, onClose }: any) => {
   // Form state
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
@@ -145,138 +150,138 @@ const AddProductForm = () => {
   };
 
   return (
-    <Box
-      maxWidth="md"
-      width="full"
-      borderWidth={1}
-      borderRadius="lg"
-      p={6}
-      boxShadow="md"
-    >
-      <VStack spacing={4} as="form" onSubmit={handleSubmit}>
-        <Heading size="lg" textAlign="center">
-          Add New Product
-        </Heading>
+    <Drawer isOpen={isOpen} placement="right" onClose={onClose} size={'sm'}>
+      <DrawerOverlay />
+      <DrawerContent>
+        <DrawerCloseButton />
+        <DrawerHeader>Add New Product</DrawerHeader>
 
-        <FormControl isRequired>
-          <FormLabel>Product Name</FormLabel>
-          <Input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Enter product name"
-          />
-        </FormControl>
-
-        <FormControl isRequired>
-          <FormLabel>Product Price </FormLabel>
-          <NumberInput
-            value={price}
-            onChange={(valueString) => setPrice(valueString)}
-          >
-            <NumberInputField placeholder="Enter product price" />
-            <NumberInputStepper>
-              <NumberIncrementStepper />
-              <NumberDecrementStepper />
-            </NumberInputStepper>
-          </NumberInput>
-        </FormControl>
-
-        <FormControl isRequired>
-          <FormLabel>Product MRP </FormLabel>
-          <NumberInput
-            value={MRP}
-            onChange={(valueString) => setMRP(valueString)}
-          >
-            <NumberInputField placeholder="Enter product MRP" />
-            <NumberInputStepper>
-              <NumberIncrementStepper />
-              <NumberDecrementStepper />
-            </NumberInputStepper>
-          </NumberInput>
-        </FormControl>
-
-        <FormControl isRequired>
-          <FormLabel>Category</FormLabel>
-          <Select
-            placeholder="Select category"
-            value={category}
-            onChange={(e) => setcategory(e.target.value)}
-          >
-            {categories.map((category) => (
-              <option key={category.id} value={category.name}>
-                {category.name}
-              </option>
-            ))}
-          </Select>
-        </FormControl>
-
-        <FormControl isRequired>
-          <FormLabel>Brand</FormLabel>
-          <Select
-            placeholder="Select brand"
-            value={brand}
-            onChange={(e) => setbrand(e.target.value)}
-          >
-            {brands?.map((brand: any) => (
-              <option key={brand?._id} value={brand?._id}>
-                {brand?.brandName}
-              </option>
-            ))}
-          </Select>
-        </FormControl>
-
-        <FormControl >
-          <FormLabel>Tags</FormLabel>
-          <Input
-            value={tags}
-            onChange={(e) => setTags(e.target.value)}
-            placeholder="Enter tags here"
-          />
-        </FormControl>
-
-
-        <FormControl isRequired>
-          <FormLabel>Upload Product Image</FormLabel>
-          <Flex alignItems="center" gap={4}>
-            <Input
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              hidden
-              id="image-upload"
-            />
-            <Button
-              as="label"
-              htmlFor="image-upload"
-              leftIcon={<AttachmentIcon />}
-              variant="outline"
-              cursor="pointer"
-            >
-              Choose Image
-            </Button>
-
-            {previewUrl && (
-              <Image
-                src={previewUrl}
-                alt="Preview"
-                boxSize="16"
-                objectFit="cover"
-                borderRadius="md"
+        <DrawerBody>
+          <VStack spacing={4} as="form" onSubmit={handleSubmit}>
+            <FormControl isRequired>
+              <FormLabel>Product Name</FormLabel>
+              <Input
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Enter product name"
               />
-            )}
-          </Flex>
-        </FormControl>
+            </FormControl>
 
-        <Button
-          type="submit"
-          colorScheme="blue"
-          width="full"
-          isLoading={isLoading}
-        >
-          Add Product
-        </Button>
-      </VStack>
-    </Box>
+            <FormControl isRequired>
+              <FormLabel>Product Price</FormLabel>
+              <NumberInput
+                value={price}
+                onChange={(valueString) => setPrice(valueString)}
+              >
+                <NumberInputField placeholder="Enter product price" />
+                <NumberInputStepper>
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper />
+                </NumberInputStepper>
+              </NumberInput>
+            </FormControl>
+
+            <FormControl isRequired>
+              <FormLabel>Product MRP</FormLabel>
+              <NumberInput
+                value={MRP}
+                onChange={(valueString) => setMRP(valueString)}
+              >
+                <NumberInputField placeholder="Enter product MRP" />
+                <NumberInputStepper>
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper />
+                </NumberInputStepper>
+              </NumberInput>
+            </FormControl>
+
+            <FormControl isRequired>
+              <FormLabel>Category</FormLabel>
+              <Select
+                placeholder="Select category"
+                value={category}
+                onChange={(e) => setcategory(e.target.value)}
+              >
+                {categories.map((category) => (
+                  <option key={category.id} value={category.name}>
+                    {category.name}
+                  </option>
+                ))}
+              </Select>
+            </FormControl>
+
+            <FormControl isRequired>
+              <FormLabel>Brand</FormLabel>
+              <Select
+                placeholder="Select brand"
+                value={brand}
+                onChange={(e) => setbrand(e.target.value)}
+              >
+                {brands?.map((brand: any) => (
+                  <option key={brand?._id} value={brand?._id}>
+                    {brand?.brandName}
+                  </option>
+                ))}
+              </Select>
+            </FormControl>
+
+            <FormControl>
+              <FormLabel>Tags</FormLabel>
+              <Input
+                value={tags}
+                onChange={(e) => setTags(e.target.value)}
+                placeholder="Enter tags here"
+              />
+            </FormControl>
+
+            <FormControl isRequired>
+              <FormLabel>Upload Product Image</FormLabel>
+              <Flex alignItems="center" gap={4}>
+                <Input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  hidden
+                  id="image-upload"
+                />
+                <Button
+                  as="label"
+                  htmlFor="image-upload"
+                  leftIcon={<AttachmentIcon />}
+                  variant="outline"
+                  cursor="pointer"
+                >
+                  Choose Image
+                </Button>
+
+                {previewUrl && (
+                  <Image
+                    src={previewUrl}
+                    alt="Preview"
+                    boxSize="16"
+                    objectFit="cover"
+                    borderRadius="md"
+                  />
+                )}
+              </Flex>
+            </FormControl>
+          </VStack>
+        </DrawerBody>
+
+        <DrawerFooter>
+          <Button
+            type="submit"
+            colorScheme="blue"
+            width="full"
+            isLoading={isLoading}
+            onClick={handleSubmit}
+          >
+            Add Product
+          </Button>
+        </DrawerFooter>
+      </DrawerContent>
+    </Drawer>
+
   );
 };
 

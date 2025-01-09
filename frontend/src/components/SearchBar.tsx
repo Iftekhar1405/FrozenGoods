@@ -12,6 +12,7 @@ import {
 import debounce from "lodash/debounce";
 import React, { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import AddForm from "../pages/AddForm";
 import { Product } from "../types/types";
 import Filters from "./Filter";
 
@@ -139,6 +140,7 @@ const SearchBar: React.FC = () => {
       >
         <Filters />
       </Box>
+      <AddForm />
     </Box>
 
   );

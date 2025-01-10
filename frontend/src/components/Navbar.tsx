@@ -10,7 +10,7 @@ export const Navbar: React.FC<{onMenuClick:any, isOpen:boolean}> = ({ onMenuClic
   return (
     <div className="fixed top-0 left-0 right-0 z-50">
       <div className="w-full p-0">
-        <div className="flex h-20 items-center justify-between bg-white px-4 shadow-sm">
+        <div className="flex h-20 items-center justify-between bg-navBarColor px-4 shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1)]">
           {/* Left Section with Menu */}
           <div className="flex items-center gap-4">
             <button
@@ -18,9 +18,9 @@ export const Navbar: React.FC<{onMenuClick:any, isOpen:boolean}> = ({ onMenuClic
               className="inline-flex items-center justify-center rounded-md p-2 text-blue-600 hover:bg-blue-50 focus:outline-none"
               aria-label="Open Menu"
             >
-              <Menu className="h-6 w-6" />
+              <Menu className="text-fontColor  h-7 w-7 md:h-6 md:w-8 " />
             </button>
-            <span className="text-xl font-bold text-blue-600 md:hidden">
+            <span className="text-xl font-bold text-fontColor md:hidden">
               Freezer Faves
             </span>
           </div>
@@ -29,14 +29,14 @@ export const Navbar: React.FC<{onMenuClick:any, isOpen:boolean}> = ({ onMenuClic
           <div className="flex items-center justify-center">
             <div className="hidden md:block">
               <div className="relative flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-500 transition-all hover:bg-blue-600">
+                <div className="flex h-14 w-14 items-center justify-center rounded-full transition-all hover:bg-blue-600">
                   <img 
-                    src="/api/placeholder/40/40" 
+                    src=".\public\logo.jpg" 
                     alt="Logo" 
                     className="rounded-full"
                   />
                 </div>
-                <span className="text-xl font-bold text-blue-600">
+                <span className="text-xl font-bold text-fontColor">
                   Freezer Faves
                 </span>
               </div>

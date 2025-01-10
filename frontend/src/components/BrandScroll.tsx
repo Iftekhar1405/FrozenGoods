@@ -44,63 +44,75 @@ const BrandScroll = () => {
     );
   }
 
-  const handleCategoryClick = (brand:string) => {
+  const handleCategoryClick = (brand: string) => {
     navigate(`/brand=${brand}`);
   };
 
-  const handleSeeMore = () => {
+  const handleShowAll = () => {
     setShowAll(true);
   };
 
-  const displayBrands = showAll ? brands : brands.slice(0, 4);
+  const getInitialDisplayCount = () => {
+    if (window.innerWidth >= 1024) return 8; // lg breakpoint
+    if (window.innerWidth >= 768) return 6; // md breakpoint
+    return 3; // mobile
+  };
+
+  const displayBrands = showAll ? brands : brands.slice(0, getInitialDisplayCount());
 
   return (
-    <div className="mt-4 p-6 rounded-lg shadow-lg bg-gray-50" ref={containerRef}>
-      <div className="flex items-center my-4">
-        <div className="flex-grow border-t-2 border-slate-400"></div>
-        <div className="w-3 h-3 rounded-full bg-black mx-2 transform translate-y-px"></div>
-        <div className="flex-grow border-t-2 border-slate-400"></div>
+    <div
+      className="mt-4 p-6 rounded-lg bg-gray-50"
+      ref={containerRef}
+    >
+      {/* Section Header with Animation */}
+      <div className="flex items-center mb-6 animate-fade-in">
+        <div className="flex-grow border-t-2 border-gray-300"></div>
+        <h3 className="px-4 text-2xl font-bold text-gray-800">Our Brands</h3>
+        <div className="flex-grow border-t-2 border-gray-300"></div>
       </div>
 
-      <h3 className="text-2xl font-bold mb-4 text-gray-800">
-        Explore Your Brands:
-      </h3>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
-        {displayBrands.map((brand:any, index:number) => (
+      {/* Brand Grid */}
+      <div className="grid grid-cols-3 md:grid-cols-6 lg:grid-cols-8 gap-4">
+        {displayBrands.map((brand: any, index: number) => (
           <div
             key={index}
-            className="p-4 bg-white rounded-md shadow-sm border cursor-pointer transform transition-all hover:scale-105 hover:shadow-xl"
             onClick={() => handleCategoryClick(brand.brandName)}
+            className="group cursor-pointer animate-fade-in-up"
           >
-            <img
-              src={brand.img}
-              alt={brand.brandName}
-              className="h-32 w-full object-contain mb-2 rounded"
-            />
-            <p className="font-bold text-center bg-gradient-to-r from-red-500 to-red-300 bg-clip-text text-transparent">
-              {brand.brandName}
-            </p>
+            <div className="aspect-square rounded-2xl bg-white p-4 shadow-sm border border-gray-100 
+                            transition-all duration-300 ease-in-out transform
+                            hover:shadow-lg hover:border-gray-200 hover:-translate-y-1 hover:scale-105">
+              <div className="h-full w-full flex flex-col items-center justify-center">
+                <img
+                  src={brand.img}
+                  alt={brand.brandName}
+                  className="w-full h-3/4 object-contain mb-2 transition-transform duration-300 group-hover:scale-110"
+                />
+                <p className="text-sm font-medium text-gray-700 text-center 
+                             group-hover:text-red-500 transition-colors duration-300">
+                  {brand.brandName}
+                </p>
+              </div>
+            </div>
           </div>
         ))}
       </div>
 
-      {!showAll && brands.length > 4 && (
-        <div className="flex justify-center mt-6">
+      {/* Show All Button */}
+      {!showAll && brands.length > getInitialDisplayCount() && (
+        <div className="flex justify-center mt-8 animate-fade-in">
           <button
-            onClick={handleSeeMore}
-            className="px-8 py-2 bg-red-500 text-white rounded-md shadow-md hover:transform hover:-translate-y-0.5 hover:shadow-lg transition-all"
+            onClick={handleShowAll}
+            className="px-6 py-2.5 bg-gray-900 text-white text-sm font-medium rounded-lg
+                       shadow-sm hover:bg-gray-600 hover:shadow-md 
+                       transition-all duration-300 ease-in-out transform
+                       hover:scale-105 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
           >
-            See More
+            Show All Brands
           </button>
         </div>
       )}
-
-      <div className="flex items-center my-4">
-        <div className="flex-grow border-t-2 border-slate-400"></div>
-        <div className="w-3 h-3 rounded-full bg-black mx-2 transform -translate-y-px"></div>
-        <div className="flex-grow border-t-2 border-slate-400"></div>
-      </div>
     </div>
   );
 };

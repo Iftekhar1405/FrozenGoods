@@ -1,140 +1,116 @@
-import {
-  Box,
-  Drawer,
-  DrawerBody,
-  DrawerCloseButton,
-  DrawerContent,
-  DrawerHeader,
-  DrawerOverlay,
-  Hide,
-  IconButton,
-  Link,
-  Show,
-  Text,
-  useDisclosure,
-  VStack
-} from "@chakra-ui/react";
-import { Menu } from "lucide-react";
-import React from "react";
-import { Link as RouterLink, useLocation } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
-const categories = [
-  "Frozen Meals",
-  "Ice Cream",
-  "Vegetables",
-  "Pizza",
-  "Seafood",
-  "Meat",
-];
+interface Category {
+  _id: string;
+  name: string;
+  img: string;
+}
 
-const SidebarContent = () => {
+interface SidebarProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const location = useLocation();
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  return (
-    <VStack spacing={4} align="stretch">
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch('https://frezzers-faves-api.vercel.app/products/category/');
+        const data = await response.json();
+        setCategories(data);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  const SidebarContent = () => (
+    <div className="flex flex-col gap-4 p-4">
       <Link
-        as={RouterLink}
         to="/"
-        p={2}
-        borderRadius="md"
-        bg={location.pathname === "/" ? "blue.100" : "transparent"}
-        _hover={{ bg: "blue.100" }}
+        className={`rounded-lg p-3 shadow-sm hover:bg-blue-50 ${
+          location.pathname === "/" ? "bg-blue-100" : "bg-white"
+        }`}
       >
-        <Text fontWeight="bold">Home</Text>
+        <span className="font-bold">Home</span>
       </Link>
 
-      <Text fontWeight="bold" fontSize="lg" mt={4}>
-        Categories
-      </Text>
+      {/* Categories Section */}
+      <div className="mt-4">
+        <h2 className="mb-4 text-lg font-bold">Categories</h2>
+        {loading ? (
+          <div className="flex justify-center">
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
+          </div>
+        ) : categories.length === 0 ? (
+          <p className="text-center font-medium text-gray-500">
+            No categories available.
+          </p>
+        ) : (
+          <div className="flex flex-col gap-4">
+            {categories.map((category) => (
+              <Link
+                key={category._id}
+                to={`/category/${category.name.toLowerCase()}`}
+                className="block transition-transform hover:-translate-y-0.5 hover:no-underline"
+              >
+                <div className="flex items-center gap-3 rounded-lg bg-white p-3 shadow-sm hover:bg-blue-50">
+                  <img
+                    src={category.img}
+                    alt={category.name}
+                    className="h-12 w-12 rounded-full object-cover"
+                  />
+                  <span className="font-medium">{category.name}</span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
 
-      {categories.map((category) => (
+      <div className="mt-8">
         <Link
-          key={category}
-          as={RouterLink}
-          to={`/category/${category.toLowerCase()}`}
-          p={2}
-          borderRadius="md"
-          bg={
-            location.pathname === `/category/${category.toLowerCase()}`
-              ? "blue.100"
-              : "transparent"
-          }
-          _hover={{ bg: "blue.100" }}
+          to="/scan"
+          className={`block rounded-lg p-3 shadow-sm hover:bg-blue-50 ${
+            location.pathname === "/scan" ? "bg-blue-100" : "bg-white"
+          }`}
         >
-          <Text>{category}</Text>
+          <span className="font-bold">Scan QR Code</span>
         </Link>
-      ))}
-
-      <Link
-        as={RouterLink}
-        to="/cart"
-        p={2}
-        borderRadius="md"
-        bg={location.pathname === "/cart" ? "blue.100" : "transparent"}
-        _hover={{ bg: "blue.100" }}
-        mt={8}
-      >
-        <Text fontWeight="bold">Shopping Cart</Text>
-      </Link>
-
-      <Link
-        as={RouterLink}
-        to="/scan"
-        p={2}
-        borderRadius="md"
-        bg={location.pathname === "/scan" ? "blue.100" : "transparent"}
-        _hover={{ bg: "blue.100" }}
-      >
-        <Text fontWeight="bold">Scan QR Code</Text>
-      </Link>
-    </VStack>
+      </div>
+    </div>
   );
-};
-
-const Sidebar: React.FC = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <>
-      {/* Hamburger menu button - only visible on mobile */}
-      <Show below="md">
-        <IconButton
-          icon={<Menu />}
-          aria-label="Open Menu"
-          onClick={onOpen}
-          position="fixed"
-          top={4}
-          left={4}
-          zIndex={20}
-        />
-      </Show>
-
-      {/* Mobile Drawer */}
-      <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
-        <DrawerOverlay />
-        <DrawerContent>
-          <DrawerCloseButton />
-          <DrawerHeader>Menu</DrawerHeader>
-          <DrawerBody bg="blue.50">
-            <SidebarContent />
-          </DrawerBody>
-        </DrawerContent>
-      </Drawer>
+      {/* Mobile Sidebar */}
+      <div
+        className={`fixed inset-0 z-40 transform bg-gray-600 bg-opacity-75 transition-opacity duration-300 ease-in-out ${
+          isOpen ? "opacity-100" : "pointer-events-none opacity-0"
+        }`}
+        onClick={onClose}
+      />
+      <div
+        className={`fixed top-20 left-0 z-40 h-[calc(100vh-80px)] w-64 transform overflow-y-auto bg-gray-50 transition-transform duration-300 ease-in-out ${
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        <SidebarContent />
+      </div>
 
       {/* Desktop Sidebar */}
-      <Hide below="md">
-        <Box
-          w={{ base: "200px", lg: "250px" }}
-          h="100vh"
-          bg="blue.50"
-          p={4}
-          position="sticky"
-          top={0}
-          overflowY="auto"
-        >
-          <SidebarContent />
-        </Box>
-      </Hide>
+      <div className="fixed top-20 left-0 hidden h-[calc(100vh-80px)] w-64 border-r border-gray-200 bg-gray-50 md:block">
+        <SidebarContent />
+      </div>
     </>
   );
 };

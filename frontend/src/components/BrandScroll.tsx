@@ -1,267 +1,108 @@
-import {
-    Box,
-    BoxProps,
-    Button,
-    Center,
-    Divider,
-    DividerProps,
-    Flex,
-    Grid,
-    GridProps,
-    Image,
-    Skeleton,
-    SkeletonText,
-    Spinner,
-    Text
-} from '@chakra-ui/react';
+import React, { useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { motion, useInView } from 'framer-motion';
-import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { fetchBrands } from './Filter';
-
-const MotionBox: any = motion<BoxProps>(Box as any);
-const MotionDivider: any = motion<DividerProps>(Divider as any);
-const MotionGrid: any = motion<GridProps>(Grid as any)
-
-const CategorySkeleton = () => (
-    <Box
-        borderWidth="1px"
-        borderRadius="md"
-        overflow="hidden"
-        boxShadow="sm"
-        bg="white"
-        p={3}
-        width="100%"
-    >
-        <Skeleton height="130px" borderRadius="sm" mb={2} />
-        <SkeletonText mt="2" noOfLines={1} spacing="4" />
-    </Box>
-);
-
-const DecorativeDivider = ({ isTop = true }) => (
-    <Flex align="center" my={4}>
-        <MotionDivider
-            borderColor="slate.400"
-            borderWidth="2px"
-            initial={{ width: 0 }}
-            animate={{ width: "100%" }}
-            transition={{ duration: 2.4, delay: 0.6 }}
-        />
-        <Box
-            bg="black"
-            w={3}
-            h={3}
-            borderRadius="full"
-            mx={2}
-            transform={isTop ? "translateY(1px)" : "translateY(-1px)"}
-        />
-        <MotionDivider
-            borderColor="slate.400"
-            borderWidth="2px"
-            initial={{ width: 0 }}
-            animate={{ width: "100%" }}
-            transition={{ duration: 2.4, delay: 0.6 }}
-        />
-    </Flex>
-);
 
 const BrandScroll = () => {
-    const navigate = useNavigate();
-    const [showAll, setShowAll] = useState(false);
-    const containerRef = useRef(null);
-    const isInView = useInView(containerRef, { once: false, margin: "-100px" });
+  const navigate = useNavigate();
+  const [showAll, setShowAll] = useState(false);
+  const containerRef = useRef(null);
 
-    const { data: brands, isLoading: brandsLoading, isError }: any = useQuery({
-        queryKey: ['brands'],
-        queryFn: fetchBrands,
-
-    });
-
-    // console.log(brands)
-
-    // const bgColor = useColorModeValue('white', 'gray.800');
-    // const borderColor = useColorModeValue('gray.200', 'gray.700');
-
-    // const handleBrandClick = (url: any) => {
-    //     navigate(url);
-    // };
-
-    if (brandsLoading) {
-        return (
-            <Center h="200px">
-                <Spinner size="lg" />
-            </Center>
-        );
+  const fetchBrands = async () => {
+    const response = await fetch('https://frezzers-faves-api.vercel.app/products/brand');
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
     }
+    return response.json();
+  };
 
-    if (isError) {
-        return (
-            <Center h="200px">
-                <Text color="red.500">Failed to load brands</Text>
-            </Center>
-        );
-    }
+  const { data: brands, isLoading, isError } = useQuery({
+    queryKey: ['brands'],
+    queryFn: fetchBrands,
+  });
 
-    if (!brands || brands.length === 0) {
-        return (
-            <Center h="200px">
-                <Text>No brands available</Text>
-            </Center>
-        );
-    }
-
-    const handleCategoryClick = (brand: any) => {
-        navigate(`/brand=${brand}`);
-    };
-
-    const handleSeeMore = () => {
-        setShowAll(true);
-    };
-
-    const containerVariants = {
-        hidden: { opacity: 0 },
-        visible: {
-            opacity: 1,
-            transition: {
-                staggerChildren: 0.1,
-            },
-        },
-    };
-
-    const itemVariants = {
-        hidden: { opacity: 0, y: 20 },
-        visible: {
-            opacity: 1,
-            y: 0,
-            transition: {
-                duration: 0.5,
-            },
-        },
-    };
-
-    const displayCategories = showAll ? brands : brands.slice(0, 4);
-
-
+  if (isLoading) {
     return (
-        <MotionBox
-            ref={containerRef}
-            initial="hidden"
-            animate={isInView ? "visible" : "hidden"}
-            variants={containerVariants}
-            mt={1}
-            boxShadow="lg"
-            p={3}
-            borderRadius="md"
-            bg="gray.50"
-        >
-            <DecorativeDivider isTop={true} />
-
-            <motion.div
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-            >
-                <motion.h3
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-                    style={{
-                        fontSize: "1.5rem",
-                        fontWeight: "bold",
-                        marginBottom: "1rem",
-                        color: "#2D3748"
-                    }}
-                >
-                    Explore Your Brands:
-                </motion.h3>
-            </motion.div>
-
-            <MotionGrid
-                templateColumns={{
-                    base: "1fr",       // Mobile: 1 column
-                    sm: "repeat(2, 1fr)", // Small screens (≥480px): 2 columns
-                    md: "repeat(3, 1fr)", // Tablets (≥768px): 3 columns
-                    lg: "repeat(4, 1fr)"  // Laptops and larger screens (≥1024px): 4 columns
-                }}
-                gap={3}
-                px={{
-                    base: 2,   // Mobile: smaller padding
-                    sm: 4,     // Small screens and above: moderate padding
-                    md: 6,     // Tablets: more padding
-                    lg: 8      // Laptops: extra padding
-                }}
-                py={4} // Consistent vertical padding
-                variants={containerVariants}
-            >
-
-                {brandsLoading
-                    ? [...Array(2)].map((_, index) => (
-                        <CategorySkeleton key={`skeleton-${index}`} />
-                    ))
-                    : displayCategories.map((brand: any, index: any) => (
-                        <MotionBox
-                            key={index}
-                            variants={itemVariants}
-                            borderWidth="1px"
-                            borderRadius="md"
-                            overflow="hidden"
-                            boxShadow="sm"
-                            bg="white"
-                            p={3}
-                            textAlign="center"
-                            cursor="pointer"
-                            whileHover={{
-                                scale: 1.05,
-                                boxShadow: "xl",
-                                transition: { duration: 0.2 },
-                            }}
-                            onClick={() => handleCategoryClick(brand.brandName)}
-                        >
-                            <Image
-                                src={brand.img}
-                                alt={brand.brandName}
-                                h="130px"
-                                w="100%"
-                                objectFit="contain"
-                                mb={2}
-                                borderRadius="sm"
-                            />
-                            <Text
-                                fontWeight="bold"
-                                bgGradient="linear(to-r, red.500, red.300)"
-                                bgClip="text"
-                            >
-                                {brand.brandName}
-                            </Text>
-                        </MotionBox>
-                    ))}
-            </MotionGrid>
-
-            {!showAll && !brandsLoading && brands.length > 2 && (
-                <Flex justifyContent="center" mt={6}>
-                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                        <Button
-                            colorScheme="red"
-                            onClick={handleSeeMore}
-                            size="md"
-                            px={8}
-                            shadow="md"
-                            _hover={{
-                                transform: "translateY(-2px)",
-                                shadow: "lg",
-                            }}
-                        >
-                            See More
-                        </Button>
-                    </motion.div>
-                </Flex>
-            )}
-
-            <DecorativeDivider isTop={false} />
-        </MotionBox>
-
+      <div className="flex h-48 items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+      </div>
     );
+  }
+
+  if (isError) {
+    return (
+      <div className="flex h-48 items-center justify-center">
+        <p className="text-red-500">Failed to load brands</p>
+      </div>
+    );
+  }
+
+  if (!brands || brands.length === 0) {
+    return (
+      <div className="flex h-48 items-center justify-center">
+        <p>No brands available</p>
+      </div>
+    );
+  }
+
+  const handleCategoryClick = (brand:string) => {
+    navigate(`/brand=${brand}`);
+  };
+
+  const handleSeeMore = () => {
+    setShowAll(true);
+  };
+
+  const displayBrands = showAll ? brands : brands.slice(0, 4);
+
+  return (
+    <div className="mt-4 p-6 rounded-lg shadow-lg bg-gray-50" ref={containerRef}>
+      <div className="flex items-center my-4">
+        <div className="flex-grow border-t-2 border-slate-400"></div>
+        <div className="w-3 h-3 rounded-full bg-black mx-2 transform translate-y-px"></div>
+        <div className="flex-grow border-t-2 border-slate-400"></div>
+      </div>
+
+      <h3 className="text-2xl font-bold mb-4 text-gray-800">
+        Explore Your Brands:
+      </h3>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
+        {displayBrands.map((brand:any, index:number) => (
+          <div
+            key={index}
+            className="p-4 bg-white rounded-md shadow-sm border cursor-pointer transform transition-all hover:scale-105 hover:shadow-xl"
+            onClick={() => handleCategoryClick(brand.brandName)}
+          >
+            <img
+              src={brand.img}
+              alt={brand.brandName}
+              className="h-32 w-full object-contain mb-2 rounded"
+            />
+            <p className="font-bold text-center bg-gradient-to-r from-red-500 to-red-300 bg-clip-text text-transparent">
+              {brand.brandName}
+            </p>
+          </div>
+        ))}
+      </div>
+
+      {!showAll && brands.length > 4 && (
+        <div className="flex justify-center mt-6">
+          <button
+            onClick={handleSeeMore}
+            className="px-8 py-2 bg-red-500 text-white rounded-md shadow-md hover:transform hover:-translate-y-0.5 hover:shadow-lg transition-all"
+          >
+            See More
+          </button>
+        </div>
+      )}
+
+      <div className="flex items-center my-4">
+        <div className="flex-grow border-t-2 border-slate-400"></div>
+        <div className="w-3 h-3 rounded-full bg-black mx-2 transform -translate-y-px"></div>
+        <div className="flex-grow border-t-2 border-slate-400"></div>
+      </div>
+    </div>
+  );
 };
 
 export default BrandScroll;

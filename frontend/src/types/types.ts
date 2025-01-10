@@ -11,3 +11,9 @@ export interface CartItem {
   product: Product;
   quantity: number;
 }
+
+export interface Category {
+  _id: string;
+  name: string;
+  img: string;
+}

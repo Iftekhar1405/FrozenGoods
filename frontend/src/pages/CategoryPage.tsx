@@ -8,11 +8,12 @@ const CategoryPage: React.FC = () => {
   const { category } = useParams<{ category: string }>();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const API_URL:string = "https://frezzers-faves-api.vercel.app"
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch(`/api/products/category/${category}`);
+        const response = await fetch(`${API_URL}/products/category`);
         const data = await response.json();
         setProducts(data);
       } catch (error) {

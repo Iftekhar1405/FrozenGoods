@@ -1,206 +1,72 @@
-import {
-    CloseIcon,
-    HamburgerIcon,
-} from '@chakra-ui/icons';
-import {
-    Badge,
-    Box,
-    Button,
-    Collapse,
-    Container,
-    Flex,
-    IconButton,
-    Image,
-    Stack,
-    Text,
-    useBreakpointValue,
-    useColorModeValue,
-    useDisclosure,
-} from '@chakra-ui/react';
-import { ShoppingCartIcon } from 'lucide-react';
 import React from 'react';
+import { Menu, ShoppingCart } from "lucide-react";
+import { Link as RouterLink } from "react-router-dom";
 
-const Navbar = () => {
-    const { isOpen, onToggle } = useDisclosure();
-    const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+const NAVBAR_HEIGHT = "80px";
 
-    return (
-        <Box position={'sticky'} top={0} zIndex={100}>
-            <Container maxW="8xl" >
-                <Flex
-                    bg={'rgb(224, 212, 188)'}
-                    color={useColorModeValue('gray.600', 'white')}
-                    minH={'60px'}
-                    h={'24'}
-                    py={{ base: 2 }}
-                    px={{ base: 4 }}
-                    borderBottom={1}
-                    borderStyle={'solid'}
-                    borderColor={useColorModeValue('gray.200', 'gray.900')}
-                    align={'center'}
-                >
-                    {/* Mobile Hamburger Button */}
-                    <Flex
-                        flex={{ base: 1, md: 'auto' }}
-                        ml={{ base: -2 }}
-                        display={{ base: 'flex', md: 'none' }}
-                    >
-                        <IconButton
-                            onClick={onToggle}
-                            icon={isOpen ? <CloseIcon w={3} h={3} /> : <HamburgerIcon w={5} h={5} />}
-                            variant={'ghost'}
-                            aria-label={'Toggle Navigation'}
-                            _hover={{ bg: 'blue.50' }}
-                        />
-                    </Flex>
+export const Navbar: React.FC<{onMenuClick:any, isOpen:boolean}> = ({ onMenuClick, isOpen }) => {
+  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
 
-                    {/* Logo */}
-                    <Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'start' }}>
-                        <Flex align="center">
-                            <Box
-                                bg="blue.500"
-                                w="40px"
-                                h="40px"
-                                borderRadius="full"
-                                display="flex"
-                                alignItems="center"
-                                justifyContent="center"
-                                _hover={{ bg: 'blue.600' }}
-                                transition="all 0.2s"
-                            >
-                                <Image src='./logo.jpg' />
-                            </Box>
-                            <Text
-                                as="span"
-                                ml={3}
-                                textAlign={useBreakpointValue({ base: 'center', md: 'left' })}
-                                fontFamily={'heading'}
-                                color={useColorModeValue('gray.800', 'white')}
-                                fontWeight="bold"
-                                display={{ base: 'none', md: 'block' }}
-                            >
-                                Freezer Faves
-                            </Text>
-                        </Flex>
+  return (
+    <div className="fixed top-0 left-0 right-0 z-50">
+      <div className="w-full p-0">
+        <div className="flex h-20 items-center justify-between bg-white px-4 shadow-sm">
+          {/* Left Section with Menu */}
+          <div className="flex items-center gap-4">
+            <button
+              onClick={onMenuClick}
+              className="inline-flex items-center justify-center rounded-md p-2 text-blue-600 hover:bg-blue-50 focus:outline-none"
+              aria-label="Open Menu"
+            >
+              <Menu className="h-6 w-6" />
+            </button>
+            <span className="text-xl font-bold text-blue-600 md:hidden">
+              Freezer Faves
+            </span>
+          </div>
 
-                        {/* Desktop Navigation */}
-                        <Flex display={{ base: 'none', md: 'flex' }} ml={10}>
-                            <Stack direction={'row'} spacing={4}>
-                                {['Home', 'Products', 'About'].map((navItem) => (
-                                    <Box
-                                        key={navItem}
-                                        as="a"
-                                        p={2}
-                                        href={'#'}
-                                        fontSize={'sm'}
-                                        fontWeight={500}
-                                        color={useColorModeValue('gray.600', 'gray.200')}
-                                        _hover={{
-                                            textDecoration: 'none',
-                                            color: useColorModeValue('blue.500', 'white'),
-                                        }}
-                                        transition="all 0.2s"
-                                    >
-                                        {navItem}
-                                    </Box>
-                                ))}
-                            </Stack>
-                        </Flex>
-                    </Flex>
+          {/* Center Logo Section */}
+          <div className="flex items-center justify-center">
+            <div className="hidden md:block">
+              <div className="relative flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-500 transition-all hover:bg-blue-600">
+                  <img 
+                    src="/api/placeholder/40/40" 
+                    alt="Logo" 
+                    className="rounded-full"
+                  />
+                </div>
+                <span className="text-xl font-bold text-blue-600">
+                  Freezer Faves
+                </span>
+              </div>
+            </div>
+          </div>
 
-                    {/* Right Side Actions */}
-                    <Stack
-                        flex={{ base: 1, md: 0 }}
-                        justify={'flex-end'}
-                        direction={'row'}
-                        spacing={6}
-                        align="center"
-                    >
-                        {/* Cart Icon */}
-                        <IconButton
-                            aria-label="Shopping cart"
-                            icon={<ShoppingCartIcon />}
-                            variant="ghost"
-                            position="relative"
-                            _hover={{ bg: 'blue.50' }}
-                        >
-                            <Badge
-                                colorScheme="blue"
-                                position="absolute"
-                                top="-2px"
-                                right="-2px"
-                                borderRadius="full"
-                            >
-                                3
-                            </Badge>
-                        </IconButton>
-
-                        {/* Login/Logout Button */}
-                        <Button
-                            onClick={() => setIsLoggedIn(!isLoggedIn)}
-                            display={{ base: 'none', md: 'inline-flex' }}
-                            fontSize={'sm'}
-                            fontWeight={600}
-                            color={'white'}
-                            bg={'blue.500'}
-                            _hover={{
-                                bg: 'blue.600',
-                            }}
-                            _active={{
-                                bg: 'blue.700',
-                            }}
-                            transition="all 0.2s"
-                        >
-                            {isLoggedIn ? 'Logout' : 'Login'}
-                        </Button>
-                    </Stack>
-                </Flex>
-
-                {/* Mobile Navigation */}
-                <Collapse in={isOpen} animateOpacity>
-                    <Stack
-                        bg={useColorModeValue('white', 'gray.800')}
-                        p={4}
-                        display={{ md: 'none' }}
-                    >
-                        {['Home', 'Products', 'About'].map((navItem) => (
-                            <Stack key={navItem} spacing={4}>
-                                <Box
-                                    as="a"
-                                    href={'#'}
-                                    py={2}
-                                    _hover={{
-                                        textDecoration: 'none',
-                                        color: useColorModeValue('blue.500', 'white'),
-                                    }}
-                                    transition="all 0.2s"
-                                >
-                                    {navItem}
-                                </Box>
-                            </Stack>
-                        ))}
-                        <Button
-                            onClick={() => setIsLoggedIn(!isLoggedIn)}
-                            w="full"
-                            fontSize={'sm'}
-                            fontWeight={600}
-                            color={'white'}
-                            bg={'blue.500'}
-                            _hover={{
-                                bg: 'blue.600',
-                            }}
-                            _active={{
-                                bg: 'blue.700',
-                            }}
-                            transition="all 0.2s"
-                        >
-                            {isLoggedIn ? 'Logout' : 'Login'}
-                        </Button>
-                    </Stack>
-                </Collapse>
-            </Container>
-        </Box>
-    );
+          {/* Right Section */}
+          <div className="flex items-center gap-4">
+            <button
+              className="inline-flex items-center justify-center rounded-md p-2 text-gray-700 hover:bg-blue-50"
+              aria-label="Shopping cart"
+            >
+              <div className="relative">
+                <ShoppingCart className="h-6 w-6" />
+                <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-blue-500 text-xs text-white">
+                  3
+                </span>
+              </div>
+            </button>
+            <button
+              onClick={() => setIsLoggedIn(!isLoggedIn)}
+              className="rounded-md bg-blue-500 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-600"
+            >
+              {isLoggedIn ? 'Logout' : 'Login'}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default Navbar;

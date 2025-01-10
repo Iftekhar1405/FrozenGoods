@@ -1,15 +1,26 @@
 import { Box, Flex } from "@chakra-ui/react";
-import React from "react";
-import Navbar from "./Navbar";
+import React, { useState } from "react";
+
 import SearchBar from "./SearchBar";
+import Navbar from "./Navbar";
 import Sidebar from "./Sidebar";
 
+
+
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   return (
     <Flex minH="100vh" maxW={'100vw'}>
-      <Sidebar />
+   
       <Box >
-        <Navbar />
+      <Navbar 
+      onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)} 
+      isOpen={isSidebarOpen} 
+    />
+    <Sidebar 
+      isOpen={isSidebarOpen} 
+      onClose={() => setIsSidebarOpen(false)} 
+    />
         <SearchBar />
 
         {children}

@@ -1,10 +1,10 @@
-import React from 'react';
 import { Menu, ShoppingCart } from "lucide-react";
-import { Link as RouterLink } from "react-router-dom";
+import React from 'react';
+// import { Link as RouterLink } from "react-router-dom";
 
-const NAVBAR_HEIGHT = "80px";
+// const NAVBAR_HEIGHT = "80px";
 
-export const Navbar: React.FC<{onMenuClick:any, isOpen:boolean}> = ({ onMenuClick, isOpen }) => {
+export const Navbar: React.FC<{ onMenuClick: any, isOpen: boolean }> = ({ onMenuClick }) => {
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
 
   return (
@@ -30,9 +30,9 @@ export const Navbar: React.FC<{onMenuClick:any, isOpen:boolean}> = ({ onMenuClic
             <div className="hidden md:block">
               <div className="relative flex items-center gap-3">
                 <div className="flex h-14 w-14 items-center justify-center rounded-full transition-all hover:bg-blue-600">
-                  <img 
-                    src=".\public\logo.jpg" 
-                    alt="Logo" 
+                  <img
+                    src=".\public\logo.jpg"
+                    alt="Logo"
                     className="rounded-full"
                   />
                 </div>

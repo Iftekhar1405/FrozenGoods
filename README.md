@@ -1,6 +1,6 @@
-ALL ENDPOINTS FROM API:
-
-Auth:
+ALL ENDPOINTS FROM API: \n
+\n
+Auth: \n
   Register : POST (https://frezzers-faves-api.vercel.app/auth/register)
   LOGIN    : POST (https://frezzers-faves-api.vercel.app/auth/login)
   LOGOUT   : POST (https://frezzers-faves-api.vercel.app/auth/login)

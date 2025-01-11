@@ -23,6 +23,9 @@ export default {
         beigeShade2: "#ded3ba",
         fontColor: "#213555",
       },
+      fontFamily:{
+        serifText:["DM Serif Text", "serif"]
+      }
     },
   },
   plugins: [],

@@ -20,8 +20,8 @@ export const Navbar: React.FC<{ onMenuClick: any, isOpen: boolean }> = ({ onMenu
             >
               <Menu className="text-fontColor  h-7 w-7 md:h-6 md:w-8 " />
             </button>
-            <span className="text-xl font-bold text-fontColor md:hidden">
-              Freezer Faves
+            <span className="text-xl font-serifText underline tracking-wider text-fontColor md:hidden">
+            FREEZER FAVES
             </span>
           </div>
 
@@ -36,8 +36,8 @@ export const Navbar: React.FC<{ onMenuClick: any, isOpen: boolean }> = ({ onMenu
                     className="rounded-full"
                   />
                 </div>
-                <span className="text-xl font-bold text-fontColor">
-                  Freezer Faves
+                <span className="text-xl font-serifText tracking-wider  text-fontColor">
+                  FREEZER FAVES
                 </span>
               </div>
             </div>

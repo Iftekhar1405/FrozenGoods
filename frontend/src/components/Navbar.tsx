@@ -31,7 +31,7 @@ export const Navbar: React.FC<{ onMenuClick: any, isOpen: boolean }> = ({ onMenu
               <div className="relative flex items-center gap-3">
                 <div className="flex h-14 w-14 items-center justify-center rounded-full transition-all hover:bg-blue-600">
                   <img
-                    src=".\public\logo.jpg"
+                    src="\logo.jpg"
                     alt="Logo"
                     className="rounded-full"
                   />

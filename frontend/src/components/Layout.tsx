@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from "react";
 import { Box, Flex, useBreakpointValue } from "@chakra-ui/react";
-import SearchBar from "./SearchBar";
+import React, { useEffect, useState } from "react";
 import Navbar from "./Navbar";
+import { ProtectedRoute } from "./ProtectedRoutes";
+import SearchBar from "./SearchBar";
 import Sidebar from "./Sidebar";
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
   const isDesktop = useBreakpointValue({ base: false, md: true }) ?? false;
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  
+
   // Set initial sidebar state based on screen size
   useEffect(() => {
     setIsSidebarOpen(isDesktop);
@@ -24,27 +25,30 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
   return (
     <Box minH="100vh">
-      <Navbar 
-        onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)} 
-        isOpen={isSidebarOpen} 
-      />
-      
-      <Flex position="relative" top="20">
-        <Sidebar
+      <ProtectedRoute>
+        <Navbar
+          onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)}
           isOpen={isSidebarOpen}
-          onClose={() => setIsSidebarOpen(false)}
-          currentPath={currentPath}
-          onNavigate={handleNavigate}
         />
-        
+      </ProtectedRoute>
+      <Flex position="relative" top="20">
+        <ProtectedRoute>
+          <Sidebar
+            isOpen={isSidebarOpen}
+            onClose={() => setIsSidebarOpen(false)}
+            currentPath={currentPath}
+            onNavigate={handleNavigate}
+          />
+        </ProtectedRoute>
         {/* Main content with dynamic margin */}
         <Box
           w="full"
-          className={`transition-all duration-300 ease-in-out ${
-            isSidebarOpen ? 'md:ml-64' : 'ml-0'
-          }`}
+          className={`transition-all duration-300 ease-in-out ${isSidebarOpen ? 'md:ml-64' : 'ml-0'
+            }`}
         >
-          <SearchBar />
+          <ProtectedRoute>
+            <SearchBar />
+          </ProtectedRoute>
           {children}
         </Box>
       </Flex>

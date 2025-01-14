@@ -70,7 +70,6 @@ const AddBrandCategoryForm = ({
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
-      // Reset form
       setName('');
       setImage(null);
       setPreviewUrl(null);

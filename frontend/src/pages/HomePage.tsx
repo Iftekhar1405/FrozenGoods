@@ -1,6 +1,7 @@
 import { Box } from "@chakra-ui/react";
-import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { getQuery } from "../API/Api";
+import { URIS } from "../API/urls";
 import ProductList from "../components/ProductList";
 import { Product } from "../types/types";
 
@@ -11,8 +12,7 @@ const HomePage: React.FC = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("https://frezzers-faves-api.vercel.app/products/");
-        const data = await response.data;
+        const { data } = getQuery(URIS.PRODUCTS)
         console.log(data)
         setProducts(data.products);
       } catch (error) {
@@ -34,7 +34,7 @@ const HomePage: React.FC = () => {
       ) : (
         <>
           <ProductList products={products} />
-          
+
         </>
       )}
     </Box>

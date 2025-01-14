@@ -12,8 +12,7 @@ import {
     ModalOverlay,
     Spinner,
     Text,
-    useDisclosure,
-    VStack,
+    useDisclosure
 } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
@@ -62,9 +61,10 @@ const FilterModal = ({ isOpen, onClose, title, options, selectedValues, onSelect
                         </Box>
                     ) : (
                         // Filtered Options List
-                        <VStack
-                            align="stretch"
-                            spacing={2}
+                        <Box
+                            display={'grid'}
+                            gridTemplateColumns={'repeat(2,1fr)'}
+                            gap={5}
                             maxH="400px"
                             overflowY="auto"
                             w="100%"
@@ -86,7 +86,7 @@ const FilterModal = ({ isOpen, onClose, title, options, selectedValues, onSelect
                                     <Text>{option.brandName}</Text>
                                 </Checkbox>
                             ))}
-                        </VStack>
+                        </Box>
                     )}
                 </ModalBody>
             </ModalContent>

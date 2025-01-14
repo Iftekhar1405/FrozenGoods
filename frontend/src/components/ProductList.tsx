@@ -40,7 +40,7 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
         bg="gray.50"
       >
         <SimpleGrid
-          columns={{ base: 1, sm: 2, md: 3, lg: 4 }}
+          columns={{ base: 2, sm: 2, md: 3, lg: 4 }}
           spacing={6}
           maxW="1200px"
           w="100%"

@@ -102,7 +102,7 @@ const AddProductForm = ({ isOpen, onClose }: any) => {
     console.log(formData)
     try {
       const response: any = await axios.post('https://frezzers-faves-api.vercel.app/products', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
+        headers: { 'Content-Type': 'multipart/form-data' },    withCredentials: true,
 
       }
       );

@@ -57,7 +57,12 @@ export function AuthPage() {
                 await register(phoneNumber, password, name);
             }
             navigate('/');
-        } catch (error) {
+        } catch (error:any) {
+            if (error.response && error.response.data && error.response.data.message) {
+                setError(error.response.data.message); // Show backend error message
+            } else {
+                setError('Authentication failed. Please try again.');
+            }
             setError('Authentication failed. Please try again.');
             console.error('Auth error:', error);
         } finally {

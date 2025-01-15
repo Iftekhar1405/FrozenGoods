@@ -25,21 +25,21 @@ const AddForm = () => {
     return (
         <HStack spacing={4}>
             {/* Buttons to open respective drawers */}
-            <Button onClick={categoryOnOpen}>Add Category</Button>
+            <Button onClick={categoryOnOpen}>Add Category </Button>
             <Button onClick={brandOnOpen}>Add Brand</Button>
             <Button onClick={productOnOpen}>Add Product</Button>
 
             {/* Category Drawer */}
             <AddBrandCategoryForm
                 type="category"
-                endpoint="https://frizzers-favess-api.vercel.app/products/category"
+                endpoint="https://frezzers-faves-api.vercel.app/products/category"
                 isOpen={categoryIsOpen}
                 onClose={categoryOnClose}
             />
 
             {/* Brand Drawer */}
             <AddBrandCategoryForm
-                endpoint="https://frizzers-favess-api.vercel.app/products/brand"
+                endpoint="https://frezzers-faves-api.vercel.app/products/brand"
                 isOpen={brandIsOpen}
                 onClose={brandOnClose}
             />

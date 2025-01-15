@@ -1,3 +1,4 @@
+import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 import {
     Alert,
     AlertIcon,
@@ -12,10 +13,11 @@ import {
     Input,
     InputGroup,
     InputLeftElement,
+    InputRightElement,
     Text,
     useColorModeValue,
     useToast,
-    VStack
+    VStack,
 } from '@chakra-ui/react';
 import { Facebook, LogIn, PersonStanding, Phone, Twitter, UserPlus } from 'lucide-react';
 import { useState } from 'react';
@@ -25,17 +27,28 @@ import { useAuth } from '../context/AuthContext';
 export function AuthPage() {
     const [isLogin, setIsLogin] = useState(true);
     const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const { login, register }: any = useAuth();
     const navigate = useNavigate();
     const toast = useToast();
 
-    const handleSubmit = async (e: any) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const form = e.currentTarget;
-        const phoneNumber = "+91" + form.phoneNumber.value;
-        const password = form.password.value;
-        const name = form?.name?.value
+        setIsLoading(true);
 
+        const form: any = e.currentTarget;
+        const phoneNumber = form.phoneNumber?.value
+            ? `+91${form.phoneNumber.value}`
+            : null;
+        const password = form.password?.value || null;
+        const name = form?.name?.value || null;
+
+        if (!phoneNumber || !password || (!isLogin && !name)) {
+            setError('Please fill out all required fields.');
+            setIsLoading(false);
+            return;
+        }
 
         try {
             if (isLogin) {
@@ -47,8 +60,11 @@ export function AuthPage() {
         } catch (error) {
             setError('Authentication failed. Please try again.');
             console.error('Auth error:', error);
+        } finally {
+            setIsLoading(false); // Stop loading spinner
         }
     };
+
 
 
     const handleSocialLogin = (provider: any) => {
@@ -70,7 +86,7 @@ export function AuthPage() {
             w="100vw"
             pos="absolute"
             left={0}
-            top={{ base: 0, md: -10, lg: -20 }}
+            top={{ base: 0, md: -10, lg: -15 }}
             px={4} // Add padding for small screens
         >
             <Box
@@ -131,9 +147,15 @@ export function AuthPage() {
                             <FormControl isRequired>
                                 <FormLabel fontSize={{ base: 'sm', md: 'md' }}>Phone</FormLabel>
                                 <InputGroup>
-                                    <InputLeftElement pointerEvents="none">
+                                    <InputLeftElement
+                                        pointerEvents="none"
+                                        display="flex"
+                                        alignItems="center"
+                                        height="100%" // Ensures it spans the full height of the input
+                                    >
                                         <Icon as={Phone} color="gray.400" />
                                     </InputLeftElement>
+
                                     <Input
                                         name="phoneNumber"
                                         placeholder="Enter your phone number"
@@ -145,13 +167,24 @@ export function AuthPage() {
 
                             <FormControl isRequired>
                                 <FormLabel fontSize={{ base: 'sm', md: 'md' }}>Password</FormLabel>
-                                <Input
-                                    type="password"
-                                    name="password"
-                                    placeholder="Enter your password"
-                                    size="lg"
-                                    fontSize={{ base: 'sm', md: 'md' }}
-                                />
+                                <InputGroup>
+                                    <Input
+                                        type={showPassword ? 'text' : 'password'}
+                                        name="password"
+                                        placeholder="Enter your password"
+                                        size="lg"
+                                        fontSize={{ base: 'sm', md: 'md' }}
+                                    />
+                                    <InputRightElement height="100%" pr={2}>
+                                        <Icon
+                                            as={showPassword ? ViewOffIcon : ViewIcon}
+                                            onClick={() => setShowPassword((prev) => !prev)}
+                                            cursor="pointer"
+                                            color="gray.400"
+                                            boxSize={5}
+                                        />
+                                    </InputRightElement>
+                                </InputGroup>
                             </FormControl>
 
                             <Button
@@ -160,9 +193,11 @@ export function AuthPage() {
                                 size="lg"
                                 width="100%"
                                 mt={4}
+                                isLoading={isLoading} // Replace `isLoading` with your loading state
                             >
                                 {isLogin ? 'Sign In' : 'Sign Up'}
                             </Button>
+
                         </VStack>
                     </form>
 

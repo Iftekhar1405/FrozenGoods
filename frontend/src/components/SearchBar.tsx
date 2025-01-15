@@ -70,7 +70,6 @@ const SearchBar: React.FC = () => {
       flexDirection={{ base: "column", md: "row" }}
       justifyContent="space-between"
       alignItems="center"
-      mb={4}
       w="100%"
       maxW="1000px"
       mx="auto"

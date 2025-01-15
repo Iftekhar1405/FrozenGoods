@@ -9,7 +9,7 @@ interface User {
 interface AuthContextType {
     user: User | null;
     login: (phoneNumber: string, password: string) => Promise<void>;
-    register: (phoneNumber: string, password: string, name: string) => Promise<void>;
+    register: (phoneNumber: string, password: string, name: any) => Promise<void>;
     logout: () => Promise<void>;
     isAuthenticated: boolean;
 }
@@ -39,7 +39,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
     }, []);
 
-    const register = useCallback(async (phoneNumber: string, password: string, name: string) => {
+    const register = useCallback(async (phoneNumber: string, password: string, name: any) => {
         try {
             const response = await axios.post('https://frezzers-faves-api.vercel.app/auth/register', {
                 credentials: 'include',

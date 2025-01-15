@@ -101,12 +101,12 @@ const AddProductForm = ({ isOpen, onClose }: any) => {
     setIsLoading(true);
     console.log(formData)
     try {
-      const response: any = await axios.post('https://frizzers-favess-api.vercel.app/products', formData, {
+      const response: any = await axios.post('https://frezzers-faves-api.vercel.app/products', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
 
       }
       );
-      // console.log(response)
+      console.log(response)
       // if (!response.ok) {
       //   throw new Error('Failed to add product');
       // }

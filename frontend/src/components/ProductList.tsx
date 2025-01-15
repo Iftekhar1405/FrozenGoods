@@ -45,7 +45,7 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
           maxW="1200px"
           w="100%"
         >
-          {products.map((product) => (
+          {products?.map((product) => (
             <Box
               key={product._id}
               borderWidth="1px"

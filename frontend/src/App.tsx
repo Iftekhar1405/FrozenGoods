@@ -43,7 +43,6 @@ const App: React.FC = () => {
             <Router>
               <Layout>
                 <Routes>
-                  <Route path="/auth" element={<AuthPage />} />
                   {routeMap.map((route, index) => (
                     <Route key={index} path={route.path} element={
                       <ProtectedRoute>
@@ -52,6 +51,7 @@ const App: React.FC = () => {
                     }
                     />
                   ))}
+                  <Route path="/auth" element={<AuthPage />} />
                 </Routes>
               </Layout>
             </Router>

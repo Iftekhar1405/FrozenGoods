@@ -1,4 +1,4 @@
-import { AttachmentIcon } from '@chakra-ui/icons';
+import { AttachmentIcon } from "@chakra-ui/icons";
 import {
   Button,
   Drawer,
@@ -14,22 +14,20 @@ import {
   Image,
   Input,
   useToast,
-  VStack
-} from '@chakra-ui/react';
-import axios from 'axios';
-import { ChangeEvent, FormEvent, useState } from 'react';
-
-
+  VStack,
+} from "@chakra-ui/react";
+import axios from "axios";
+import { ChangeEvent, FormEvent, useState } from "react";
 
 const AddBrandCategoryForm = ({
-  type = 'brand',
+  type = "brand",
   endpoint,
   onSuccess,
   onError,
   isOpen,
-  onClose
+  onClose,
 }: any) => {
-  const [name, setName] = useState<string>('');
+  const [name, setName] = useState<string>("");
   const [image, setImage] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -50,9 +48,9 @@ const AddBrandCategoryForm = ({
 
     if (!name || !image) {
       toast({
-        title: 'Validation Error',
-        description: 'Please provide both name and image',
-        status: 'error',
+        title: "Validation Error",
+        description: "Please provide both name and image",
+        status: "error",
         duration: 3000,
         isClosable: true,
       });
@@ -60,36 +58,40 @@ const AddBrandCategoryForm = ({
     }
 
     const formData = new FormData();
-    formData.append('name', name);
-    formData.append('image', image);
+    formData.append("name", name);
+    formData.append("image", image);
 
     setIsLoading(true);
 
     try {
-      const response = await axios.post(`products/${endpoint}`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
+      const response = await axios.post(endpoint, formData, {
+        headers: { 
+          "Content-Type": "multipart/form-data"
+        },
+        withCredentials: true,
       });
 
-      setName('');
+      onClose(); // Close the drawer after successful submission
+      setName("");
       setImage(null);
       setPreviewUrl(null);
 
       toast({
         title: `${type.charAt(0).toUpperCase() + type.slice(1)} Added`,
         description: `Successfully added a new ${type}`,
-        status: 'success',
+        status: "success",
         duration: 3000,
         isClosable: true,
       });
 
       if (onSuccess) onSuccess(response.data);
-    } catch (error) {
+    } catch (error: any) {
       console.error(`Error adding ${type}:`, error);
 
       toast({
-        title: 'Error',
-        description: `Failed to add ${type}. Please try again later.`,
-        status: 'error',
+        title: "Error",
+        description: error.response?.data?.message || `Failed to add ${type}. Please try again later.`,
+        status: "error",
         duration: 3000,
         isClosable: true,
       });
@@ -101,8 +103,8 @@ const AddBrandCategoryForm = ({
   };
 
   return (
-    <Drawer isOpen={isOpen} placement="right" onClose={onClose} size={'sm'}>
-      < DrawerOverlay />
+    <Drawer isOpen={isOpen} placement="right" onClose={onClose} size="sm">
+      <DrawerOverlay />
       <DrawerContent>
         <DrawerCloseButton />
         <DrawerHeader>
@@ -110,9 +112,11 @@ const AddBrandCategoryForm = ({
         </DrawerHeader>
 
         <DrawerBody>
-          <VStack spacing={4} as="form" onSubmit={handleSubmit}>
+          <VStack spacing={4} as="form" id="add-form" onSubmit={handleSubmit}>
             <FormControl isRequired>
-              <FormLabel>{type.charAt(0).toUpperCase() + type.slice(1)} Name</FormLabel>
+              <FormLabel>
+                {type.charAt(0).toUpperCase() + type.slice(1)} Name
+              </FormLabel>
               <Input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -120,8 +124,10 @@ const AddBrandCategoryForm = ({
               />
             </FormControl>
 
-            <FormControl>
-              <FormLabel>Upload {type.charAt(0).toUpperCase() + type.slice(1)} Image</FormLabel>
+            <FormControl isRequired>
+              <FormLabel>
+                Upload {type.charAt(0).toUpperCase() + type.slice(1)} Image
+              </FormLabel>
               <Flex alignItems="center" gap={4}>
                 <Input
                   type="file"
@@ -155,18 +161,20 @@ const AddBrandCategoryForm = ({
         </DrawerBody>
 
         <DrawerFooter>
+          <Button variant="outline" mr={3} onClick={onClose}>
+            Cancel
+          </Button>
           <Button
             type="submit"
+            form="add-form"
             colorScheme="blue"
-            width="full"
             isLoading={isLoading}
           >
             Add {type.charAt(0).toUpperCase() + type.slice(1)}
           </Button>
         </DrawerFooter>
       </DrawerContent>
-    </Drawer >
-
+    </Drawer>
   );
 };
 

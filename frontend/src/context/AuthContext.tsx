@@ -21,13 +21,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const login = useCallback(async (phoneNumber: string, password: string) => {
         try {
+            console.log(phoneNumber, password)
             const response = await axios.post('https://frezzers-faves-api.vercel.app/auth/login', {
-
                 phoneNumber,
                 password,
-                // credential: 'include'
-            })
-            console.log(phoneNumber, password)
+
+            }, { withCredentials: true, })
             const data: any = response.data;
             console.log(response)
             setUser(data);

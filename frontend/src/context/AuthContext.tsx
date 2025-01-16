@@ -25,8 +25,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
                 phoneNumber,
                 password,
-                credentials: 'include',
-
+                // credential: 'include'
             })
             console.log(phoneNumber, password)
             const data: any = response.data;
@@ -42,7 +41,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const register = useCallback(async (phoneNumber: string, password: string, name: any) => {
         try {
             const response = await axios.post('https://frezzers-faves-api.vercel.app/auth/register', {
-                credentials: 'include',
+                withCredentials: true,
                 phoneNumber,
                 password,
                 name

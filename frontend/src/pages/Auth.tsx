@@ -63,7 +63,7 @@ export function AuthPage() {
             } else {
                 setError('Authentication failed. Please try again.');
             }
-            setError('Authentication failed. Please try again.');
+            // setError('Authentication failed. Please try again.');
             console.error('Auth error:', error);
         } finally {
             setIsLoading(false); // Stop loading spinner

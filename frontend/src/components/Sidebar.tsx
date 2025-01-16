@@ -1,6 +1,8 @@
 import { AlertCircle } from 'lucide-react';
 import React, { useState } from 'react';
 import { getQuery } from '../API/Api';
+import {SidebarProfile} from './SideBarProfile';
+import { useAuth } from '../context/AuthContext';
 
 
 interface SidebarProps {
@@ -10,7 +12,9 @@ interface SidebarProps {
   onNavigate: (path: string) => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, currentPath, onNavigate }) => {
+export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, currentPath, onNavigate }) => {
+  const { isAuthenticated } = useAuth();
+
   const [error, setError] = useState<string | null>(null);
 
   const { data: categories, isLoading: loading } = getQuery('products/category')
@@ -111,19 +115,20 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, currentPath, onNavig
 
   return (
     <>
-      {/* Overlay - only shown on mobile */}
       <div
-        className={`fixed inset-0  z-40 transform bg-gray-600 bg-opacity-75 transition-opacity duration-300 ease-in-out md:hidden ${isOpen ? "opacity-100" : "pointer-events-none opacity-0"
-          }`}
+        className={`fixed inset-0 z-40 transform bg-gray-600 bg-opacity-75 transition-opacity duration-300 ease-in-out md:hidden ${
+          isOpen ? "opacity-100" : "pointer-events-none opacity-0"
+        }`}
         onClick={onClose}
       />
 
-      {/* Sidebar - both mobile and desktop */}
       <div
-        className={`fixed shadow-xl border-stone-700 left-0 z-40 h-[calc(100vh-80px)] w-64 transform overflow-y-auto bg-gray-50 transition-transform duration-300 ease-in-out ${isOpen ? "translate-x-0" : "-translate-x-full"
-          }`}
+        className={`fixed left-0 z-40 h-[calc(100vh-80px)] w-64 transform overflow-y-auto bg-gray-50 transition-transform duration-300 ease-in-out ${
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
       >
         <SidebarContent />
+        {isAuthenticated && <SidebarProfile onClose={onClose} />}
       </div>
     </>
   );

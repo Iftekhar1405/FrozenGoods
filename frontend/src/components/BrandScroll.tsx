@@ -16,7 +16,7 @@ const BrandScroll = () => {
     };
 
     const { data: brands, isLoading, isError } = useQuery({
-        queryKey: ['brands'],
+        queryKey: ['products/brand'],
         queryFn: fetchBrands,
     });
 

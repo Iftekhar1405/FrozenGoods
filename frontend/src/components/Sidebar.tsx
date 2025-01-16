@@ -1,11 +1,7 @@
-import React, { useEffect, useState } from 'react';
 import { AlertCircle } from 'lucide-react';
+import React, { useState } from 'react';
+import { getQuery } from '../API/Api';
 
-interface Category {
-  _id: string;
-  name: string;
-  img: string;
-}
 
 interface SidebarProps {
   isOpen: boolean;
@@ -15,30 +11,10 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, currentPath, onNavigate }) => {
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        setError(null);
-        const response = await fetch('https://frezzers-faves-api.vercel.app/products/category/');
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        setCategories(data);
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-        setError("Unable to load categories. Please try again later.");
-      } finally {
-        setLoading(false);
-      }
-    };
+  const { data: categories, isLoading: loading } = getQuery('products/category')
 
-    fetchCategories();
-  }, []);
 
   const NavigationLink = ({ to, children, className }: { to: string; children: React.ReactNode; className?: string }) => (
     <a
@@ -71,7 +47,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, currentPath, onNavig
       </p>
       <button
         onClick={() => {
-          setLoading(true);
           setError(null);
           window.location.reload();
         }}
@@ -86,9 +61,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, currentPath, onNavig
     <div className="flex flex-col gap-4 p-4">
       <NavigationLink
         to="/"
-        className={`rounded-lg p-3 shadow-sm hover:bg-orange-50 hover:text-stone-700 ${
-          currentPath === "/" ? "bg-beigeShade1" : "bg-white"
-        }`}
+        className={`rounded-lg p-3 shadow-sm hover:bg-orange-50 hover:text-stone-700 ${currentPath === "/" ? "bg-beigeShade1" : "bg-white"
+          }`}
       >
         <span className="font-bold">Home</span>
       </NavigationLink>
@@ -106,7 +80,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, currentPath, onNavig
           <EmptyState />
         ) : (
           <div className="flex flex-col gap-4">
-            {categories.map((category) => (
+            {categories.map((category: any) => (
               <NavigationLink
                 key={category._id}
                 to={`/category/${category.name.toLowerCase()}`}
@@ -131,7 +105,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, currentPath, onNavig
         )}
       </div>
 
-    
+
     </div>
   );
 
@@ -139,17 +113,15 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, currentPath, onNavig
     <>
       {/* Overlay - only shown on mobile */}
       <div
-        className={`fixed inset-0  z-40 transform bg-gray-600 bg-opacity-75 transition-opacity duration-300 ease-in-out md:hidden ${
-          isOpen ? "opacity-100" : "pointer-events-none opacity-0"
-        }`}
+        className={`fixed inset-0  z-40 transform bg-gray-600 bg-opacity-75 transition-opacity duration-300 ease-in-out md:hidden ${isOpen ? "opacity-100" : "pointer-events-none opacity-0"
+          }`}
         onClick={onClose}
       />
 
       {/* Sidebar - both mobile and desktop */}
       <div
-        className={`fixed shadow-xl border-stone-700 left-0 z-40 h-[calc(100vh-80px)] w-64 transform overflow-y-auto bg-gray-50 transition-transform duration-300 ease-in-out ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
+        className={`fixed shadow-xl border-stone-700 left-0 z-40 h-[calc(100vh-80px)] w-64 transform overflow-y-auto bg-gray-50 transition-transform duration-300 ease-in-out ${isOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
       >
         <SidebarContent />
       </div>

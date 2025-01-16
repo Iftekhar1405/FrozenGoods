@@ -16,6 +16,7 @@ import {
   useToast,
   VStack,
 } from "@chakra-ui/react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { ChangeEvent, FormEvent, useState } from "react";
 
@@ -32,6 +33,7 @@ const AddBrandCategoryForm = ({
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const toast = useToast();
+  const queryClient: any = useQueryClient();
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
@@ -43,14 +45,69 @@ const AddBrandCategoryForm = ({
     }
   };
 
+
+  const mutation = useMutation(
+    {
+      mutationKey: [endpoint],
+      mutationFn: (formData: FormData) =>
+        axios.post("https://frezzers-faves-api.vercel.app/" + endpoint, formData, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+          withCredentials: true,
+        }),
+      onMutate: async () => {
+        await queryClient.cancelQueries([type]);
+        return { previousData: queryClient.getQueryData([type]) };
+      },
+      onSuccess: (data) => {
+        toast({
+          title: `${type.charAt(0).toUpperCase() + type.slice(1)} Added`,
+          description: `Successfully added a new ${type}`,
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        });
+
+        onClose();
+        setName('');
+        setImage(null);
+        setPreviewUrl(null);
+
+        if (onSuccess) onSuccess(data);
+
+        // Invalidate queries to refetch data
+        queryClient.invalidateQueries([type]);
+      },
+      onError: (error: any,) => {
+        console.error(`Error adding ${type}:`, error);
+
+        toast({
+          title: 'Error',
+          description:
+            error.response?.data?.message ||
+            `Failed to add ${type}. Please try again later.`,
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        });
+
+        if (onError) onError(error);
+
+
+      },
+      onSettled: () => {
+        setIsLoading(false)
+      },
+    }
+  );
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
     if (!name || !image) {
       toast({
-        title: "Validation Error",
-        description: "Please provide both name and image",
-        status: "error",
+        title: 'Validation Error',
+        description: 'Please provide both name and image',
+        status: 'error',
         duration: 3000,
         isClosable: true,
       });
@@ -58,49 +115,12 @@ const AddBrandCategoryForm = ({
     }
 
     const formData = new FormData();
-    formData.append("name", name);
-    formData.append("image", image);
+    formData.append('name', name);
+    formData.append('image', image);
 
-    setIsLoading(true);
-
-    try {
-      const response = await axios.post(endpoint, formData, {
-        headers: { 
-          "Content-Type": "multipart/form-data"
-        },
-        withCredentials: true,
-      });
-
-      onClose(); // Close the drawer after successful submission
-      setName("");
-      setImage(null);
-      setPreviewUrl(null);
-
-      toast({
-        title: `${type.charAt(0).toUpperCase() + type.slice(1)} Added`,
-        description: `Successfully added a new ${type}`,
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-      });
-
-      if (onSuccess) onSuccess(response.data);
-    } catch (error: any) {
-      console.error(`Error adding ${type}:`, error);
-
-      toast({
-        title: "Error",
-        description: error.response?.data?.message || `Failed to add ${type}. Please try again later.`,
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-      });
-
-      if (onError) onError(error);
-    } finally {
-      setIsLoading(false);
-    }
+    mutation.mutate(formData);
   };
+
 
   return (
     <Drawer isOpen={isOpen} placement="right" onClose={onClose} size="sm">

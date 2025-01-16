@@ -1,14 +1,14 @@
 import { Button, HStack, useDisclosure, useToast } from "@chakra-ui/react";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import AddBrandCategoryForm from "../components/AddBrandCategoryForm";
 import AddProductForm from "../components/AddProduct";
-import axios from "axios";
 
 const AddForm = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [isAdmin, setIsAdmin] = useState(false);
     const toast = useToast();
-    
+
     // Separate calls to useDisclosure
     const {
         isOpen: categoryIsOpen,
@@ -35,12 +35,12 @@ const AddForm = () => {
                     'https://frezzers-faves-api.vercel.app/auth/check',
                     { withCredentials: true }
                 );
-                
+
                 setIsAdmin(response.data.user?.role === 'admin');
-            } catch (error:any) {
+            } catch (error: any) {
                 console.error('Auth check failed:', error);
                 setIsAdmin(false);
-                
+
                 // Only show error toast if it's not a 401/403 error
                 if (error.response?.status !== 401 && error.response?.status !== 403) {
                     toast({
@@ -72,20 +72,20 @@ const AddForm = () => {
 
             <AddBrandCategoryForm
                 type="category"
-                endpoint="https://frezzers-faves-api.vercel.app/products/category"
+                endpoint="products/category"
                 isOpen={categoryIsOpen}
                 onClose={categoryOnClose}
             />
 
             <AddBrandCategoryForm
-                endpoint="https://frezzers-faves-api.vercel.app/products/brand"
+                endpoint="products/brand"
                 isOpen={brandIsOpen}
                 onClose={brandOnClose}
             />
 
-            <AddProductForm 
-                isOpen={productIsOpen} 
-                onClose={productOnClose} 
+            <AddProductForm
+                isOpen={productIsOpen}
+                onClose={productOnClose}
             />
         </HStack>
     );

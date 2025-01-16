@@ -22,7 +22,7 @@ import {
   useToast,
   VStack,
 } from "@chakra-ui/react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 import { ChangeEvent, FormEvent, useState } from "react";
 
@@ -74,7 +74,6 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ isOpen, onClose }) => {
   const [categoryId, setCategoryId] = useState<string>("");
   const [brandId, setBrandId] = useState<string>("");
   const [tags, setTags] = useState<string>("");
-  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const toast = useToast();
 
@@ -83,7 +82,7 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ isOpen, onClose }) => {
     Category[],
     Error
   >({
-    queryKey: ["categories"],
+    queryKey: ["product/category"],
     queryFn: fetchCategories,
   });
 
@@ -91,7 +90,7 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ isOpen, onClose }) => {
     Brand[],
     Error
   >({
-    queryKey: ["brands"],
+    queryKey: ["products/brand"],
     queryFn: fetchBrands,
   });
 
@@ -106,8 +105,57 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ isOpen, onClose }) => {
       reader.readAsDataURL(file);
     }
   };
+  const useAddProduct = (onSuccess?: () => void, onError?: () => void) => {
+    const queryClient: any = useQueryClient();
 
-  const handleSubmit = async (e: FormEvent) => {
+    return useMutation(
+
+      {
+        mutationKey: ['products'],
+        mutationFn: (formData: FormData) =>
+          axios.post(`${API_BASE_URL}`, formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+            withCredentials: true,
+          }),
+        onMutate: async () => {
+          // Optionally cancel ongoing queries or implement optimistic updates here
+          await queryClient.cancelQueries(['products']);
+        },
+        onSuccess: () => {
+          toast({
+            title: "Product Added",
+            description: "Successfully added new product",
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+          });
+
+          queryClient.invalidateQueries(['products']); // Refetch product list
+          if (onSuccess) onSuccess();
+        },
+        onError: (error: AxiosError) => {
+          console.error("Error adding product:", error);
+
+          toast({
+            title: "Error",
+            description: "Failed to add product",
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+          });
+
+          if (onError) onError();
+        },
+        onSettled: () => {
+          queryClient.invalidateQueries(['products']); // Ensure cache is updated
+        },
+      }
+    );
+  };
+
+  const mutation = useAddProduct()
+
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
 
     const tagsArr = tags
@@ -136,49 +184,9 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ isOpen, onClose }) => {
     formData.append("MRP", MRP);
     formData.append("price", price);
 
-    setIsLoading(true);
-
-    try {
-      const response = await axios.post(API_BASE_URL, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-        withCredentials: true,
-      });
-      console.log(response.data);
-
-      // Reset form
-      setName("");
-      setPrice("");
-      setImage(null);
-      setPreviewUrl(null);
-      setCategoryId("");
-      setBrandId("");
-      setMRP("");
-      setTags("");
-
-      toast({
-        title: "Product Added",
-        description: "Successfully added new product",
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-      });
-
-      onClose();
-    } catch (error) {
-      console.error("Error adding product:", error);
-      const axiosError: any = error as AxiosError;
-      toast({
-        title: "Error",
-        description:
-          axiosError.response?.data?.message || "Failed to add product",
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-      });
-    } finally {
-      setIsLoading(false);
-    }
+    mutation.mutate(formData);
   };
+
 
   return (
     <Drawer isOpen={isOpen} placement="right" onClose={onClose} size="sm">
@@ -314,7 +322,7 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ isOpen, onClose }) => {
             type="submit"
             colorScheme="blue"
             width="full"
-            isLoading={isLoading}
+            isLoading={mutation.isPending}
             onClick={handleSubmit}
           >
             Add Product

@@ -1,8 +1,14 @@
-import { Button, HStack, useDisclosure } from "@chakra-ui/react";
+import { Button, HStack, useDisclosure, useToast } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 import AddBrandCategoryForm from "../components/AddBrandCategoryForm";
 import AddProductForm from "../components/AddProduct";
+import axios from "axios";
 
 const AddForm = () => {
+    const [isLoading, setIsLoading] = useState(true);
+    const [isAdmin, setIsAdmin] = useState(false);
+    const toast = useToast();
+    
     // Separate calls to useDisclosure
     const {
         isOpen: categoryIsOpen,
@@ -22,14 +28,48 @@ const AddForm = () => {
         onClose: productOnClose,
     } = useDisclosure();
 
+    useEffect(() => {
+        const checkAuthStatus = async () => {
+            try {
+                const response = await axios.get(
+                    'https://frezzers-faves-api.vercel.app/auth/check',
+                    { withCredentials: true }
+                );
+                
+                setIsAdmin(response.data.user?.role === 'admin');
+            } catch (error:any) {
+                console.error('Auth check failed:', error);
+                setIsAdmin(false);
+                
+                // Only show error toast if it's not a 401/403 error
+                if (error.response?.status !== 401 && error.response?.status !== 403) {
+                    toast({
+                        title: "Error",
+                        description: "Failed to verify authentication status",
+                        status: "error",
+                        duration: 3000,
+                        isClosable: true,
+                    });
+                }
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        checkAuthStatus();
+    }, [toast]);
+
+    // Show nothing while loading or if not admin
+    if (isLoading || !isAdmin) {
+        return null;
+    }
+
     return (
         <HStack spacing={4}>
-            {/* Buttons to open respective drawers */}
-            <Button onClick={categoryOnOpen}>Add Category </Button>
+            <Button onClick={categoryOnOpen}>Add Category</Button>
             <Button onClick={brandOnOpen}>Add Brand</Button>
             <Button onClick={productOnOpen}>Add Product</Button>
 
-            {/* Category Drawer */}
             <AddBrandCategoryForm
                 type="category"
                 endpoint="https://frezzers-faves-api.vercel.app/products/category"
@@ -37,15 +77,16 @@ const AddForm = () => {
                 onClose={categoryOnClose}
             />
 
-            {/* Brand Drawer */}
             <AddBrandCategoryForm
                 endpoint="https://frezzers-faves-api.vercel.app/products/brand"
                 isOpen={brandIsOpen}
                 onClose={brandOnClose}
             />
 
-            {/* Product Form */}
-            <AddProductForm isOpen={productIsOpen} onClose={productOnClose} />
+            <AddProductForm 
+                isOpen={productIsOpen} 
+                onClose={productOnClose} 
+            />
         </HStack>
     );
 };

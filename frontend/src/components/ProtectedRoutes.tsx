@@ -1,16 +1,19 @@
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
-interface ProtectedRouteProps {
-    children: React.ReactNode;
-}
+export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+    const { isAuthenticated, isLoading } = useAuth();
+    const location = useLocation();
 
-export function ProtectedRoute({ children }: ProtectedRouteProps) {
-    const { isAuthenticated } = useAuth();
+    // Show loading state or spinner while checking authentication
+    if (isLoading) {
+        return <div>Loading...</div>; // You can replace this with a proper loading spinner
+    }
 
-    if (!isAuthenticated) {
-        return <Navigate to="/auth" replace />;
+    if (!isAuthenticated && location.pathname !== '/') {
+        // Only redirect to auth if not on home page
+        return <Navigate to="/auth" state={{ from: location }} replace />;
     }
 
     return <>{children}</>;
-}
+};

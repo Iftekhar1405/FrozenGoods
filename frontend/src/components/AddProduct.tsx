@@ -1,4 +1,4 @@
-import { AttachmentIcon } from '@chakra-ui/icons';
+import { AttachmentIcon } from "@chakra-ui/icons";
 import {
   Button,
   Drawer,
@@ -20,14 +20,14 @@ import {
   NumberInputStepper,
   Select,
   useToast,
-  VStack
-} from '@chakra-ui/react';
-import { useQuery } from '@tanstack/react-query';
-import axios, { AxiosError } from 'axios';
-import { ChangeEvent, FormEvent, useState } from 'react';
+  VStack,
+} from "@chakra-ui/react";
+import { useQuery } from "@tanstack/react-query";
+import axios, { AxiosError } from "axios";
+import { ChangeEvent, FormEvent, useState } from "react";
 
 // API Constants
-const API_BASE_URL = 'https://frezzers-faves-api.vercel.app/products';
+const API_BASE_URL = "https://frezzers-faves-api.vercel.app/products";
 
 // Interfaces
 interface Category {
@@ -66,27 +66,33 @@ const fetchBrands = async (): Promise<Brand[]> => {
 
 const AddProductForm: React.FC<AddProductFormProps> = ({ isOpen, onClose }) => {
   // Form state
-  const [name, setName] = useState<string>('');
-  const [price, setPrice] = useState<string>('');
-  const [MRP, setMRP] = useState<string>('');
+  const [name, setName] = useState<string>("");
+  const [price, setPrice] = useState<string>("");
+  const [MRP, setMRP] = useState<string>("");
   const [image, setImage] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [categoryId, setCategoryId] = useState<string>('');
-  const [brandId, setBrandId] = useState<string>('');
-  const [tags, setTags] = useState<string>('');
+  const [categoryId, setCategoryId] = useState<string>("");
+  const [brandId, setBrandId] = useState<string>("");
+  const [tags, setTags] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const toast = useToast();
 
   // Fetch categories and brands
-  const { data: categories = [], isLoading: categoriesLoading } = useQuery<Category[], Error>({
-    queryKey: ['categories'],
-    queryFn: fetchCategories
+  const { data: categories = [], isLoading: categoriesLoading } = useQuery<
+    Category[],
+    Error
+  >({
+    queryKey: ["categories"],
+    queryFn: fetchCategories,
   });
 
-  const { data: brands = [], isLoading: brandsLoading } = useQuery<Brand[], Error>({
-    queryKey: ['brands'],
-    queryFn: fetchBrands
+  const { data: brands = [], isLoading: brandsLoading } = useQuery<
+    Brand[],
+    Error
+  >({
+    queryKey: ["brands"],
+    queryFn: fetchBrands,
   });
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -104,14 +110,17 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ isOpen, onClose }) => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    const tagsArr = tags.trim().split(',').filter(tag => tag.length > 0);
+    const tagsArr = tags
+      .trim()
+      .split(",")
+      .filter((tag) => tag.length > 0);
     const tagsArrString = JSON.stringify(tagsArr);
 
     if (!name || !image || !categoryId || !brandId || !MRP) {
       toast({
-        title: 'Validation Error',
-        description: 'Please fill in all required fields',
-        status: 'error',
+        title: "Validation Error",
+        description: "Please fill in all required fields",
+        status: "error",
         duration: 3000,
         isClosable: true,
       });
@@ -119,48 +128,50 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ isOpen, onClose }) => {
     }
 
     const formData = new FormData();
-    formData.append('name', name);
-    formData.append('image', image);
-    formData.append('category', categoryId);
-    formData.append('brand', brandId);
-    formData.append('tags', tagsArrString);
-    formData.append('MRP', MRP);
-    formData.append('price', price);
+    formData.append("name", name);
+    formData.append("image", image);
+    formData.append("category", categoryId);
+    formData.append("brand", brandId);
+    formData.append("tags", tagsArrString);
+    formData.append("MRP", MRP);
+    formData.append("price", price);
 
     setIsLoading(true);
 
     try {
       const response = await axios.post(API_BASE_URL, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
+        headers: { "Content-Type": "multipart/form-data" },
         withCredentials: true,
       });
+      console.log(response.data);
 
       // Reset form
-      setName('');
-      setPrice('');
+      setName("");
+      setPrice("");
       setImage(null);
       setPreviewUrl(null);
-      setCategoryId('');
-      setBrandId('');
-      setMRP('');
-      setTags('');
+      setCategoryId("");
+      setBrandId("");
+      setMRP("");
+      setTags("");
 
       toast({
-        title: 'Product Added',
-        description: 'Successfully added new product',
-        status: 'success',
+        title: "Product Added",
+        description: "Successfully added new product",
+        status: "success",
         duration: 3000,
         isClosable: true,
       });
 
       onClose();
     } catch (error) {
-      console.error('Error adding product:', error);
-      const axiosError:any = error as AxiosError;
+      console.error("Error adding product:", error);
+      const axiosError: any = error as AxiosError;
       toast({
-        title: 'Error',
-        description: axiosError.response?.data?.message || 'Failed to add product',
-        status: 'error',
+        title: "Error",
+        description:
+          axiosError.response?.data?.message || "Failed to add product",
+        status: "error",
         duration: 3000,
         isClosable: true,
       });
@@ -182,7 +193,9 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ isOpen, onClose }) => {
               <FormLabel>Product Name</FormLabel>
               <Input
                 value={name}
-                onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  setName(e.target.value)
+                }
                 placeholder="Enter product name"
               />
             </FormControl>
@@ -220,7 +233,9 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ isOpen, onClose }) => {
               <Select
                 placeholder="Select category"
                 value={categoryId}
-                onChange={(e: ChangeEvent<HTMLSelectElement>) => setCategoryId(e.target.value)}
+                onChange={(e: ChangeEvent<HTMLSelectElement>) =>
+                  setCategoryId(e.target.value)
+                }
                 isDisabled={categoriesLoading}
               >
                 {categories.map((category) => (
@@ -236,7 +251,9 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ isOpen, onClose }) => {
               <Select
                 placeholder="Select brand"
                 value={brandId}
-                onChange={(e: ChangeEvent<HTMLSelectElement>) => setBrandId(e.target.value)}
+                onChange={(e: ChangeEvent<HTMLSelectElement>) =>
+                  setBrandId(e.target.value)
+                }
                 isDisabled={brandsLoading}
               >
                 {brands.map((brand) => (
@@ -251,7 +268,9 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ isOpen, onClose }) => {
               <FormLabel>Tags</FormLabel>
               <Input
                 value={tags}
-                onChange={(e: ChangeEvent<HTMLInputElement>) => setTags(e.target.value)}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  setTags(e.target.value)
+                }
                 placeholder="Enter tags separated by commas"
               />
             </FormControl>

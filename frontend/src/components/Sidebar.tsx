@@ -131,16 +131,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, currentPath, onNavig
         )}
       </div>
 
-      <div className="mt-8">
-        <NavigationLink
-          to="/scan"
-          className={`block rounded-lg p-3 shadow-sm hover:bg-blue-50 ${
-            currentPath === "/scan" ? "bg-blue-100" : "bg-white"
-          }`}
-        >
-          <span className="font-bold">Scan QR Code</span>
-        </NavigationLink>
-      </div>
+    
     </div>
   );
 
@@ -148,7 +139,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, currentPath, onNavig
     <>
       {/* Overlay - only shown on mobile */}
       <div
-        className={`fixed inset-0 z-40 transform bg-gray-600 bg-opacity-75 transition-opacity duration-300 ease-in-out md:hidden ${
+        className={`fixed inset-0  z-40 transform bg-gray-600 bg-opacity-75 transition-opacity duration-300 ease-in-out md:hidden ${
           isOpen ? "opacity-100" : "pointer-events-none opacity-0"
         }`}
         onClick={onClose}
@@ -156,7 +147,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, currentPath, onNavig
 
       {/* Sidebar - both mobile and desktop */}
       <div
-        className={`fixed left-0 z-40 h-[calc(100vh-80px)] w-64 transform overflow-y-auto bg-gray-50 transition-transform duration-300 ease-in-out ${
+        className={`fixed shadow-xl border-stone-700 left-0 z-40 h-[calc(100vh-80px)] w-64 transform overflow-y-auto bg-gray-50 transition-transform duration-300 ease-in-out ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >

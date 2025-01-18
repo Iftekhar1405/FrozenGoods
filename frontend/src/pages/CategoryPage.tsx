@@ -36,7 +36,7 @@ const CategoryPage: React.FC = () => {
           Loading...
         </Box>
       ) : (
-        <ProductList products={products} />
+        <ProductList initialProducts={products} />
       )}
     </Box>
   );

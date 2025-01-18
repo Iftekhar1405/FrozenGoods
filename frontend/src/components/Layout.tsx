@@ -24,35 +24,38 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   };
 
   return (
-    <Box minH="100vh">
-      <ProtectedRoute>
-        <Navbar
-          onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          isOpen={isSidebarOpen}
-        />
-      </ProtectedRoute>
-      <Flex position="relative" top="20">
-        <ProtectedRoute>
-          <Sidebar
-            isOpen={isSidebarOpen}
-            onClose={() => setIsSidebarOpen(false)}
-            currentPath={currentPath}
-            onNavigate={handleNavigate}
-          />
-        </ProtectedRoute>
-        {/* Main content with dynamic margin */}
-        <Box
-          w="full"
-          className={`transition-all duration-300 ease-in-out ${isSidebarOpen ? 'md:ml-64' : 'ml-0'
-            }`}
-        >
-          <ProtectedRoute>
-            <SearchBar />
-          </ProtectedRoute>
-          {children}
-        </Box>
-      </Flex>
-    </Box>
+<Box minH="100vh" overflow="hidden">
+  <ProtectedRoute>
+    <Navbar
+      onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)}
+      isOpen={isSidebarOpen}
+    />
+  </ProtectedRoute>
+  <Flex position="relative" top="20">
+    <ProtectedRoute>
+      <Sidebar
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
+        currentPath={currentPath}
+        onNavigate={handleNavigate}
+      />
+    </ProtectedRoute>
+    {/* Main content with dynamic margin and overflow handling */}
+    {/* // In Layout.tsx */}
+<Box
+  w="full"
+  className={`transition-all duration-300 ease-in-out overflow-x-hidden ${
+    isSidebarOpen ? 'md:ml-64' : 'ml-0'
+  }`}
+  pb="16" // Add padding bottom to account for fixed pagination
+>
+  <ProtectedRoute>
+    <SearchBar />
+  </ProtectedRoute>
+  {children}
+</Box>
+  </Flex>
+</Box>
   );
 };
 

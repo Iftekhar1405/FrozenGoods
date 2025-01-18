@@ -20,7 +20,7 @@ const Cart: React.FC = () => {
   const toast = useToast();
 
   const total = state.items.reduce(
-    (sum, item) => sum + item.product.price * item.quantity,
+    (sum, item:any) => sum + item.product.price * item.quantity,
     0
   );
 
@@ -65,7 +65,7 @@ const Cart: React.FC = () => {
           </Tr>
         </Thead>
         <Tbody>
-          {state.items.map((item) => (
+          {state.items.map((item:any) => (
             <Tr key={item.product._id}>
               <Td>{item.product.name}</Td>
               <Td>

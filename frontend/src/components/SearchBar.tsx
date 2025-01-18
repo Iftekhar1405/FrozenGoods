@@ -7,7 +7,7 @@ import {
   List,
   ListItem,
   Spinner,
-  Text
+  Text,
 } from "@chakra-ui/react";
 import debounce from "lodash/debounce";
 import React, { useCallback, useState } from "react";
@@ -57,7 +57,7 @@ const SearchBar: React.FC = () => {
   };
 
   const handleResultClick = (product: Product) => {
-    navigate(`/category/${product.category.toLowerCase()}`, {
+    navigate(`/category/${String(product.category).toLowerCase()}`, {
       state: { highlightProduct: product._id },
     });
     setShowResults(false);
@@ -118,7 +118,7 @@ const SearchBar: React.FC = () => {
               >
                 <Text fontWeight="medium">{product.name}</Text>
                 <Text fontSize="sm" color="gray.600">
-                  {product.category} - ${product.price.toFixed(2)}
+                  {String(product.category)} - ${Number(product.price).toFixed(2)}
                 </Text>
               </ListItem>
             ))}
@@ -141,7 +141,6 @@ const SearchBar: React.FC = () => {
       </Box>
       <AddForm />
     </Box>
-
   );
 };
 

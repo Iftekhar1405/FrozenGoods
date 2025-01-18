@@ -1,19 +1,45 @@
-export interface Product {
+export interface Brand {
   _id: string;
-  name: string;
-  category: string;
-  price: number;
-  image?: string;
-  stockQuantity: number;
-}
-
-export interface CartItem {
-  product: Product;
-  quantity: number;
+  brandName: string;
+  img: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
 }
 
 export interface Category {
   _id: string;
   name: string;
   img: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
+
+export interface Product {
+  _id: string;
+  name: string;
+  brand: Brand;
+  category: Category;
+  MRP: string;
+  price: string;
+  isFavorite: boolean;
+  image: string;
+  inStock: boolean;
+  tags: string[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PaginationResponse {
+  products: Product[];
+  totalProducts: number;
+  currentPage: string;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+}
+export interface CartItem {
+  product: Product;
+  quantity: number;
 }

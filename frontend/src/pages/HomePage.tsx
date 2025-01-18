@@ -3,21 +3,17 @@ import React from "react";
 import { getQuery } from "../API/Api";
 import { URIS } from "../API/urls";
 import ProductList from "../components/ProductList";
+import BrandScroll from "../components/BrandScroll";
 
 const HomePage: React.FC = () => {
-
-  const { data } = getQuery(URIS.PRODUCTS)
-
-
-
-
+  const { data } = getQuery(URIS.PRODUCTS);
 
   return (
     <Box>
-
       <>
-        <ProductList products={data?.products} />
-
+        <BrandScroll />
+        {/* Pass initialProducts instead of products */}
+        <ProductList initialProducts={data?.products || []} />
       </>
     </Box>
   );

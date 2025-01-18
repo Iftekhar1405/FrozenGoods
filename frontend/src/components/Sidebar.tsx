@@ -1,9 +1,8 @@
 import { AlertCircle } from 'lucide-react';
 import React, { useState } from 'react';
 import { getQuery } from '../API/Api';
-import {SidebarProfile} from './SideBarProfile';
+import { SidebarProfile } from './SideBarProfile';
 import { useAuth } from '../context/AuthContext';
-
 
 interface SidebarProps {
   isOpen: boolean;
@@ -14,11 +13,8 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, currentPath, onNavigate }) => {
   const { isAuthenticated } = useAuth();
-
   const [error, setError] = useState<string | null>(null);
-
-  const { data: categories, isLoading: loading } = getQuery('products/category')
-
+  const { data: categories, isLoading: loading } = getQuery('products/category');
 
   const NavigationLink = ({ to, children, className }: { to: string; children: React.ReactNode; className?: string }) => (
     <a
@@ -61,17 +57,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, currentPath, 
     </div>
   );
 
-  const SidebarContent = () => (
-    <div className="flex flex-col gap-4 p-4">
-      <NavigationLink
-        to="/"
-        className={`rounded-lg p-3 shadow-sm hover:bg-orange-50 hover:text-stone-700 ${currentPath === "/" ? "bg-beigeShade1" : "bg-white"
-          }`}
-      >
-        <span className="font-bold">Home</span>
-      </NavigationLink>
-
-      <div className="mt-4">
+  const CategorySection = () => (
+    <div className="flex-1 overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+      <div className="p-4">
         <h2 className="mb-4 text-lg font-bold">Categories</h2>
         {loading ? (
           <div className="flex flex-col items-center justify-center p-6">
@@ -80,15 +68,15 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, currentPath, 
           </div>
         ) : error ? (
           <CustomAlert message={error} />
-        ) : categories.length === 0 ? (
+        ) : categories?.length === 0 ? (
           <EmptyState />
         ) : (
-          <div className="flex flex-col gap-4">
-            {categories.map((category: any) => (
+          <div className="flex flex-col gap-4 pb-20"> {/* Added pb-20 for bottom padding */}
+            {categories?.map((category: any) => (
               <NavigationLink
                 key={category._id}
                 to={`/category/${category.name.toLowerCase()}`}
-                className="block transition-transform hover:-translate-y-0.5 hover:no-underline"
+                className="block transform transition-all duration-200 ease-in-out hover:-translate-y-0.5 hover:no-underline"
               >
                 <div className="flex items-center gap-3 rounded-lg bg-white p-3 text-stone-700 shadow-lg hover:bg-orange-50">
                   <img
@@ -97,8 +85,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, currentPath, 
                     className="h-12 w-12 rounded-full object-cover"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
-                      target.src = '/placeholder-category.png'; // Fallback image
-                      target.onerror = null; // Prevent infinite loop
+                      target.src = '/placeholder-category.png';
+                      target.onerror = null;
                     }}
                   />
                   <span className="font-medium">{category.name}</span>
@@ -108,8 +96,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, currentPath, 
           </div>
         )}
       </div>
-
-
     </div>
   );
 
@@ -123,12 +109,31 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, currentPath, 
       />
 
       <div
-        className={`fixed left-0 z-40 h-[calc(100vh-80px)] w-64 transform overflow-y-auto bg-gray-50 transition-transform duration-300 ease-in-out ${
+        className={`fixed left-0 z-40 flex h-[calc(100vh-80px)] w-64 transform flex-col bg-gray-50 transition-all duration-300 ease-in-out ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <SidebarContent />
-        {isAuthenticated && <SidebarProfile onClose={onClose} />}
+        {/* Fixed Home Button */}
+        <div className="p-4">
+          <NavigationLink
+            to="/"
+            className={`block rounded-lg p-3 shadow-sm transition-colors duration-200 hover:bg-orange-50 hover:text-stone-700 ${
+              currentPath === "/" ? "bg-beigeShade1" : "bg-white"
+            }`}
+          >
+            <span className="font-bold">Home</span>
+          </NavigationLink>
+        </div>
+
+        {/* Scrollable Category Section */}
+        <CategorySection />
+
+        {/* Fixed Profile Section */}
+        {isAuthenticated && (
+          <div className="mt-auto border-t border-gray-200">
+            <SidebarProfile onClose={onClose} />
+          </div>
+        )}
       </div>
     </>
   );

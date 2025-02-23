@@ -2,13 +2,14 @@ import { Menu, ShoppingCart } from "lucide-react";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useCart } from "../Hooks.tsx/useCart";
 
 export const Navbar: React.FC<{ onMenuClick: any; isOpen: boolean }> = ({
   onMenuClick,
 }) => {
   const navigate = useNavigate();
   const { isAuthenticated, isLoading } = useAuth();
-
+  const { itemCount} = useCart()
   const handleLoginClick = () => {
     navigate("/auth");
   };
@@ -47,17 +48,22 @@ export const Navbar: React.FC<{ onMenuClick: any; isOpen: boolean }> = ({
 
           {/* Right Section */}
           <div className="flex items-center gap-4">
-            <button
-              className="inline-flex items-center justify-center rounded-md p-2 text-gray-700 hover:bg-blue-50"
-              aria-label="Shopping cart"
-            >
-              <div className="relative">
-                <ShoppingCart className="h-6 w-6" />
-                <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-blue-500 text-xs text-white">
-                  3
-                </span>
-              </div>
-            </button>
+           {!isLoading && isAuthenticated && (
+             <button
+             onClick={() => navigate("/cart")}
+             className="inline-flex items-center justify-center rounded-md p-2  text-gray-700 border-none focus:outline-none0 "
+             aria-label="Shopping cart"
+           >
+             <div className="relative">
+               <ShoppingCart className="h-6 w-6" />
+            {itemCount && (
+                 <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-blue-500 text-xs text-white ">
+                 {itemCount}
+               </span>
+            )}
+             </div>
+           </button>
+           )}
 
             {!isLoading && !isAuthenticated && (
               <button

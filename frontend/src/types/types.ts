@@ -43,3 +43,26 @@ export interface CartItem {
   product: Product;
   quantity: number;
 }
+
+export interface authState  {
+  name: string;
+  phoneNumber:string;
+  password: string;
+  general?: string
+
+}
+
+// types.ts
+export interface FormData {
+    name: string;
+    phoneNumber: string;
+    password: string;
+  }
+  
+  export interface AuthErrors {
+    name?: string;
+    phoneNumber?: string;
+    password?: string;
+    general?: string;
+  }
+  

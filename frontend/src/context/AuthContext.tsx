@@ -6,6 +6,7 @@ import React, {
   useState,
   useEffect,
 } from "react";
+import { BASE_URL } from "../API/urls";
 
 interface User {
   id: string;
@@ -33,7 +34,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const checkAuth = async () => {
       try {
         const response = await axios.get(
-          "https://frezzers-faves-api.vercel.app/auth/check",
+          `${BASE_URL}auth/check`,
           {
             withCredentials: true,
           }
@@ -55,7 +56,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = useCallback(async (phoneNumber: string, password: string) => {
     try {
       const response = await axios.post(
-        "https://frezzers-faves-api.vercel.app/auth/login",
+        `${BASE_URL}auth/login`,
         {
           phoneNumber,
           password,
@@ -78,7 +79,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     async (phoneNumber: string, password: string, name: string) => {
       try {
         const response = await axios.post(
-          "https://frezzers-faves-api.vercel.app/auth/register",
+          `${BASE_URL}auth/register`,
           {
             phoneNumber,
             password,
@@ -94,7 +95,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(userData);
 
         // Perform an immediate auth check to ensure everything is synchronized
-        await axios.get("https://frezzers-faves-api.vercel.app/auth/check", {
+        await axios.get(`${BASE_URL}auth/check`, {
           withCredentials: true,
         });
       } catch (error) {
@@ -108,7 +109,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = useCallback(async () => {
     try {
       await axios.post(
-        "https://frezzers-faves-api.vercel.app/auth/logout",
+        `${BASE_URL}auth/logout`,
         {},
         { withCredentials: true }
       );

@@ -25,9 +25,8 @@ import {
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 import { ChangeEvent, FormEvent, useState } from "react";
+import { BASE_URL } from "../API/urls";
 
-// API Constants
-const API_BASE_URL = "https://frezzers-faves-api.vercel.app/products";
 
 // Interfaces
 interface Category {
@@ -55,12 +54,12 @@ interface AddProductFormProps {
 
 // API Functions
 const fetchCategories = async (): Promise<Category[]> => {
-  const response = await axios.get(`${API_BASE_URL}/category/`);
+  const response = await axios.get(`${BASE_URL}/category/`);
   return response.data;
 };
 
 const fetchBrands = async (): Promise<Brand[]> => {
-  const response = await axios.get(`${API_BASE_URL}/brand`);
+  const response = await axios.get(`${BASE_URL}/brand`);
   return response.data;
 };
 
@@ -113,7 +112,7 @@ const AddProductForm: React.FC<AddProductFormProps> = ({ isOpen, onClose }) => {
       {
         mutationKey: ['products'],
         mutationFn: (formData: FormData) =>
-          axios.post(`${API_BASE_URL}`, formData, {
+          axios.post(`${BASE_URL}`, formData, {
             headers: { "Content-Type": "multipart/form-data" },
             withCredentials: true,
           }),

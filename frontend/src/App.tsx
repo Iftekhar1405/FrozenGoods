@@ -8,9 +8,9 @@ import { ProtectedRoute } from "./components/ProtectedRoutes";
 import { AuthProvider } from "./context/AuthContext";
 import { CartProvider } from "./context/CartContext";
 import AddForm from "./pages/AddForm";
-import { AuthPage } from "./pages/Auth";
 import CategoryPage from "./pages/CategoryPage";
 import HomePage from "./pages/HomePage";
+import AuthPage from "./pages/Auth";
 
 const App: React.FC = () => {
   const routeMap = [
@@ -34,6 +34,11 @@ const App: React.FC = () => {
       element: <Cart />,
       protected: true
     },
+    {
+      path:"/auth",
+      element: <AuthPage />,
+      protected:false
+    }
   ];
 
   const queryClient = new QueryClient();
@@ -59,7 +64,6 @@ const App: React.FC = () => {
                       }
                     />
                   ))}
-                  <Route path="/auth" element={<AuthPage />} />
                   <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
               </Layout>

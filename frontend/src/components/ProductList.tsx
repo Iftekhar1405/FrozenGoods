@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Product, PaginationResponse } from '../types/types';
+import { useCart } from '../Hooks.tsx/useCart';
+import { BASE_URL } from '../API/urls';
+import {ProductCard} from './ProductCard';
 
 interface ProductListProps {
   initialProducts?: Product[];
@@ -8,18 +11,16 @@ interface ProductListProps {
 
 const ProductList: React.FC<ProductListProps> = ({ initialProducts = [] }) => {
   const [products, setProducts] = useState<Product[]>(initialProducts);
-  const [quantities, setQuantities] = useState<Record<string, number>>({});
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [slideDirection, setSlideDirection] = useState<'left' | 'right'>('right');
+  const { addToCart } = useCart();
 
   const fetchProducts = async (page: number) => {
     setIsLoading(true);
     try {
-      const response = await fetch(
-        `https://frezzers-faves-api.vercel.app/products?page=${page}&limit=20`
-      );
+      const response = await fetch(`${BASE_URL}products?page=${page}&limit=20`);
       const data: PaginationResponse = await response.json();
       setProducts(data.products);
       setTotalPages(data.totalPages);
@@ -35,11 +36,9 @@ const ProductList: React.FC<ProductListProps> = ({ initialProducts = [] }) => {
     fetchProducts(currentPage);
   }, [currentPage]);
 
-  const handleAddToCart = (product: Product) => {
-    const id = product._id;
-    const quantity = quantities[id] || 1;
-    console.log('Adding to cart:', { product, quantity });
-    setQuantities({ ...quantities, [id]: 1 });
+  const handleAddToCart = async (productId: string, quantity: number) => {
+    const payload = { productId, quantity };
+    await addToCart(payload);
   };
 
   const handlePageChange = (newPage: number) => {
@@ -47,13 +46,6 @@ const ProductList: React.FC<ProductListProps> = ({ initialProducts = [] }) => {
       setSlideDirection(newPage > currentPage ? 'right' : 'left');
       setCurrentPage(newPage);
       window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  };
-
-  const handleQuantityChange = (productId: string, value: string) => {
-    const newQuantity = parseInt(value);
-    if (!isNaN(newQuantity) && newQuantity >= 1 && newQuantity <= 99) {
-      setQuantities(prev => ({ ...prev, [productId]: newQuantity }));
     }
   };
 
@@ -87,55 +79,11 @@ const ProductList: React.FC<ProductListProps> = ({ initialProducts = [] }) => {
                   <LoadingSkeleton key={index} />
                 ))
               : products.map((product) => (
-                  <div
+                  <ProductCard
                     key={product._id}
-                    className="bg-white border border-beigeShade2 rounded-lg overflow-hidden
-                              transform transition-all duration-300 hover:-translate-y-1
-                              hover:shadow-[0_3px_10px_rgb(0,0,0,0.08)]
-                              animate-fade-in-up"
-                  >
-                    <div className="relative h-32 overflow-hidden">
-                      <img
-                        src={product.image || "/placeholder.png"}
-                        alt={product.name}
-                        className="w-full h-full object-cover transform transition-transform duration-300 hover:scale-105"
-                      />
-                    </div>
-
-                    <div className="p-3 space-y-1">
-                      <h3 className="text-sm font-medium text-fontColor font-serifText line-clamp-1">
-                        {product.name}
-                      </h3>
-                      <p className="text-sm font-semibold text-fontColor">
-                        Rs.{product.price}
-                      </p>
-
-                      <div className="flex items-center gap-1 pt-1">
-                        <input
-                          type="number"
-                          min="1"
-                          max="99"
-                          value={quantities[product._id] || 1}
-                          onChange={(e) => handleQuantityChange(product._id, e.target.value)}
-                          className="w-14 h-7 px-1 text-sm border border-beigeShade2 rounded 
-                                   focus:ring-1 focus:ring-fontColor focus:outline-none"
-                        />
-                        <button
-                          onClick={() => handleAddToCart(product)}
-                          disabled={!product.inStock}
-                          className={`
-                            flex-1 h-7 px-2 rounded text-xs font-medium
-                            transform transition-all duration-200
-                            ${product.inStock 
-                              ? 'bg-fontColor hover:bg-opacity-90 active:scale-95 text-white'
-                              : 'bg-beigeShade1 text-gray-400 cursor-not-allowed'}
-                          `}
-                        >
-                          Add to Bag
-                        </button>
-                      </div>
-                    </div>
-                  </div>
+                    product={product}
+                    onAddToCart={handleAddToCart}
+                  />
                 ))}
           </div>
 

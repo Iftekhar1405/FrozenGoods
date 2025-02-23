@@ -15,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 import AddForm from "../pages/AddForm";
 import { Product } from "../types/types";
 import Filters from "./Filter";
+import { BASE_URL } from "../API/urls";
 
 const SearchBar: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -27,7 +28,7 @@ const SearchBar: React.FC = () => {
     try {
       setLoading(true);
       const response = await fetch(
-        `/api/products/search?q=${encodeURIComponent(query)}`
+        `${BASE_URL}products/search?q=${encodeURIComponent(query)}`
       );
       const data = await response.json();
       setResults(data);

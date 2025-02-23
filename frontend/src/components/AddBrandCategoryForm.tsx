@@ -19,6 +19,7 @@ import {
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { ChangeEvent, FormEvent, useState } from "react";
+import { BASE_URL } from "../API/urls";
 
 const AddBrandCategoryForm = ({
   type = "brand",
@@ -50,7 +51,7 @@ const AddBrandCategoryForm = ({
     {
       mutationKey: [endpoint],
       mutationFn: (formData: FormData) =>
-        axios.post("https://frezzers-faves-api.vercel.app/" + endpoint, formData, {
+        axios.post(BASE_URL + endpoint, formData, {
           headers: { 'Content-Type': 'multipart/form-data' },
           withCredentials: true,
         }),

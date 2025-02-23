@@ -18,10 +18,11 @@ import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { BASE_URL } from '../API/urls';
 
 // Mock API calls - replace with your actual API endpoints
 export const fetchBrands = async () => {
-    const response = await axios.get('https://frezzers-faves-api.vercel.app/products/brand');
+    const response = await axios.get(`${BASE_URL}products/brand`);
     console.log(response)
     return response.data
 };

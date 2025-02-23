@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import AddBrandCategoryForm from "../components/AddBrandCategoryForm";
 import AddProductForm from "../components/AddProduct";
 import axios from "axios";
+import { BASE_URL } from "../API/urls";
 
 const AddForm = () => {
     const [isLoading, setIsLoading] = useState(true);
@@ -18,7 +19,7 @@ const AddForm = () => {
         const checkAuthStatus = async () => {
             try {
                 const response = await axios.get(
-                    'https://frezzers-faves-api.vercel.app/auth/check',
+                    `${BASE_URL}auth/check`,
                     { withCredentials: true }
                 );
 

@@ -34,14 +34,3 @@ export const postQuery = (ENDPOINT: string, data: any) => {
         },
     });
 }
-
-// const { mutate: addSchoolStudent, isPending: loadingAdd } = useAddSchoolStudent({
-//     onSuccess: () => {
-//         SuccessAlert()
-//         setAssignSchool(false)
-//         schoolStudentRefetch && schoolStudentRefetch()
-//     },
-//     onError: (e: any) => {
-//         ErrorAlert(e?.message)
-//     }
-// })

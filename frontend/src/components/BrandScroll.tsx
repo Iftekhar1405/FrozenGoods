@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { BASE_URL } from '../API/urls';
 
 const BrandScroll = () => {
     const navigate = useNavigate();
@@ -8,7 +9,7 @@ const BrandScroll = () => {
     const containerRef = useRef(null);
 
     const fetchBrands = async () => {
-        const response = await fetch('https://frezzers-faves-api.vercel.app/products/brand');
+        const response = await fetch(`${BASE_URL}products/brand`);
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }

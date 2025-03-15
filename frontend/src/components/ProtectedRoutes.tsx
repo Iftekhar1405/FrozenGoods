@@ -1,3 +1,4 @@
+import { Loader2 } from 'lucide-react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
@@ -7,7 +8,7 @@ export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 
     // Show loading state or spinner while checking authentication
     if (isLoading) {
-        return <div>Loading...</div>; // You can replace this with a proper loading spinner
+        return <Loader2 />; // You can replace this with a proper loading spinner
     }
 
     if (!isAuthenticated && location.pathname !== '/') {

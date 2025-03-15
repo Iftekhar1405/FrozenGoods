@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { Product } from '../types/types';
-import { Loader2 } from 'lucide-react';
 import { useToast } from '@chakra-ui/react';
+import { Loader2 } from 'lucide-react';
+import React, { useState } from 'react';
+import { useAuth } from '../context/AuthContext';
+import { Product } from '../types/types';
 
 interface ProductCardProps {
   product: Product;
@@ -12,6 +13,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }
   const [quantity, setQuantity] = useState<number>(1);
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
+  const { isAuthenticated } = useAuth();
+
 
   const handleQuantityChange = (value: string) => {
     // Allow empty input
@@ -30,6 +33,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }
 
   const handleAddToCart = async () => {
     // Prevent adding to cart if quantity is 0
+    if (!isAuthenticated) {
+      toast({
+        title: "Please login to add item to cart",
+        status: "error"
+      })
+    }
     if (quantity === 0) {
       toast({
         title: "Invalid Quantity",

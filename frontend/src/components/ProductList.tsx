@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { Product, PaginationResponse } from '../types/types';
-import { useCart } from '../Hooks.tsx/useCart';
+import { useEffect, useState } from 'react';
 import { BASE_URL } from '../API/urls';
-import {ProductCard} from './ProductCard';
+import { useCart } from '../Hooks.tsx/useCart';
+import { PaginationResponse, Product } from '../types/types';
+import { ProductCard } from './ProductCard';
 
 interface ProductListProps {
   initialProducts?: Product[];
@@ -38,7 +38,7 @@ const ProductList: React.FC<ProductListProps> = ({ initialProducts = [] }) => {
 
   const handleAddToCart = async (productId: string, quantity: number) => {
     const payload = { productId, quantity };
-    await addToCart(payload);
+    addToCart(payload);
   };
 
   const handlePageChange = (newPage: number) => {
@@ -62,29 +62,29 @@ const ProductList: React.FC<ProductListProps> = ({ initialProducts = [] }) => {
     <div className="min-h-screen bg-beigeShade1">
       <div className="w-full px-4 py-4">
         <div className="max-w-7xl mx-auto">
-          <div 
+          <div
             className={`
               grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 
               gap-3 md:gap-4 mb-8
               transition-all duration-500 ease-in-out
               transform
-              ${slideDirection === 'right' 
-                ? 'translate-x-0 opacity-100' 
+              ${slideDirection === 'right'
+                ? 'translate-x-0 opacity-100'
                 : '-translate-x-full opacity-0'
               }
             `}
           >
             {isLoading
               ? Array.from({ length: 12 }).map((_, index) => (
-                  <LoadingSkeleton key={index} />
-                ))
+                <LoadingSkeleton key={index} />
+              ))
               : products.map((product) => (
-                  <ProductCard
-                    key={product._id}
-                    product={product}
-                    onAddToCart={handleAddToCart}
-                  />
-                ))}
+                <ProductCard
+                  key={product._id}
+                  product={product}
+                  onAddToCart={handleAddToCart}
+                />
+              ))}
           </div>
 
           <div className="flex justify-center items-center py-8 mt-4 bg-white rounded-lg shadow-sm

@@ -1,9 +1,10 @@
 import { Box, Heading } from "@chakra-ui/react";
+import { Loader2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { BASE_URL } from "../API/urls";
 import ProductList from "../components/ProductList";
 import { Product } from "../types/types";
-import { BASE_URL } from "../API/urls";
 
 const CategoryPage: React.FC = () => {
   const { category } = useParams<{ category: string }>();
@@ -34,7 +35,7 @@ const CategoryPage: React.FC = () => {
       </Heading>
       {loading ? (
         <Box textAlign="center" py={10}>
-          Loading...
+          <Loader2 />
         </Box>
       ) : (
         <ProductList initialProducts={products} />

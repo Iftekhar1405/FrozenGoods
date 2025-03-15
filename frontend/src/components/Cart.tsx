@@ -1,6 +1,7 @@
 import { ArrowLeft, CreditCard, Minus, Plus, ShoppingCart, Trash2, Truck } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../Hooks.tsx/useCart';
+import { useAuth } from '../context/AuthContext';
 
 const CartItem = ({ item, addToCart, removeFromCart }: any) => {
   const { product, quantity } = item;
@@ -87,6 +88,23 @@ const Cart = () => {
     clearAllFromCart,
     isClearingCart,
   } = useCart();
+
+  const { user } = useAuth()
+  console.log(user)
+  const sendToWhatsApp = (products: any) => {
+    console.log(products);
+    const phoneNumber = "917773000440";
+
+    const message = products
+      .map((product: any, index: any) => `${index + 1}. ${product.product.name} - ₹${product.product.price} (Qty: ${product.quantity})`)
+      .join("\n");
+
+    const formattedMessage = `Hello, I'm ${user?.name}, I want to order the following items from your website :\n\n${message}\n\n Name: ${user?.name}\n Phone Number: ${user?.phoneNumber}`;
+
+    const encodedMessage = encodeURIComponent(formattedMessage);
+
+    window.open(`https://wa.me/${phoneNumber}?text=${encodedMessage}`, "_blank");
+  };
 
   if (isCartLoading) {
     return (
@@ -197,7 +215,7 @@ const Cart = () => {
                                transition-all duration-200 
                                hover:bg-blue-700 active:scale-95
                                focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
-                               shadow-md shadow-blue-500/20">
+                               shadow-md shadow-blue-500/20" onClick={() => sendToWhatsApp(cart?.items)}>
                 Proceed to Checkout
               </button>
 
@@ -215,8 +233,8 @@ const Cart = () => {
           </div>
         </div>
       </div>
-    </div>
+    </div >
   );
 };
 
-export default Cart;
+export default Cart
